@@ -1,0 +1,38 @@
+﻿
+.header {
+    margin-top:0;
+    height: 50px;
+    background-color: #229cc3;
+    width:100%;
+}
+
+.leftPanel {
+    background-color: #f8f8f8;
+    float: left;
+    border-right: 1px solid lightgray;
+    width: 9%;
+    
+}
+
+.menu-item {
+    display: block;
+    text-decoration: none;
+    background-color: #e5e5e5;
+    line-height: 44px;
+    padding-left: 10px;
+    color: #393939;
+}
+
+.menu-item-detail {
+    display: block;
+    line-height: 44px;
+    margin-left: 0px;
+}
+
+.leftPanel li {
+    border-top: 1px solid;
+    border-top-color: lightgray;
+}
+a:hover {
+    text-decoration: none;
+}
