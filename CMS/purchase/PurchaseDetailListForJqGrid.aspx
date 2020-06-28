@@ -17,16 +17,38 @@
     <script src="../js/i18n/grid.locale-en.js"></script>
     <script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            var screenHeight = document.documentElement.clientHeight;
+        function SearchClick() {
+            var ddl_project = $("#ddl_project").val();
+            var ddl_supplier = $("#ddl_supplier").val();
+            var ddl_isInWarehouse = $("#ddl_isInWarehouse").val();
+            var txt_searchKey = $("#txt_searchKey").val();
+            //清空表格中数据
+            $("#tableList").jqGrid("clearGridData");
+            //alert($("#ddl_project").var());
+            $("#tableList").jqGrid("setGridParam",
+                {
+                    url: "../purchase/PurchaseHandler.ashx",
+                    postData: { pId: ddl_project, pSupplier: ddl_supplier, pWarehouse: ddl_isInWarehouse, pSearch: txt_searchKey },
+                    mtype: "post",
+                    datatype: "json"
+                }).trigger("reloadGrid");
+        }
+        function load() {
+             var screenHeight = document.documentElement.clientHeight;
             var top =document.getElementById("div_rightPanel").offsetTop;
             //document.getElementById("div_gridPanel").style.height = screenHeight - 100 + "px";
             var hight = screenHeight - top -110;
             //document.getElementById("tableList").style.height = hight + "px";
+            var ddl_project = $("#ddl_project").val();
+            var ddl_supplier = $("#ddl_supplier").val();
+            var ddl_isInWarehouse = $("#ddl_isInWarehouse").val();
+            var txt_searchKey = $("#txt_searchKey").val();
+            //alert($("#ddl_project").var());
             $("#tableList").jqGrid(
                 {
                     //url: "../purchase/PurchaseDetailListForJqGrid.aspx/GetJsonString",
-                    url:"../purchase/PurchaseHandler.ashx",
+                    url: "../purchase/PurchaseHandler.ashx",
+                    postData: {pId:ddl_project,pSupplier:ddl_supplier,pWarehouse:ddl_isInWarehouse,pSearch:txt_searchKey},
                     mtype: "post",
                     datatype: "json",
                     //colNames: ['所属项目'],
@@ -62,7 +84,6 @@
                     //autoScroll: false,
                     //shrinkToFit: false,
                     rownumWidth: 40,
-                    
                     loadComplete: function () { 
                         //var grid = $("#tableList");
                         //var ids = grid.getDataIDs();
@@ -79,6 +100,9 @@
             $("#tableList").jqGrid('setLabel', 0, '序号', 'labelstyle');
             //$("#tableList").jqGrid('setFrozenColumns');
             //$("#tableList").jqGrid("navGrid", "#pager1", { edit: false, add: true, del: true });
+        };
+        $(document).ready(function () {
+            load();
         });
     </script>
     <style type="text/css">
@@ -107,6 +131,32 @@
     <UC:Top runat="server" ID="Top" />
     <UC:Left runat="server" ID="Left" />
         <div id="div_rightPanel" class="rightPanel">
+                <div class="row form-inline form-group">
+                    <div class="col-md-3 ">
+                        <span class="text-info">所属项目:</span>
+                        <asp:DropDownList ID="ddl_project" runat="server" CssClass="form-control" style="width:60%" AutoPostBack="true"></asp:DropDownList>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="text-info">供应商:</span>
+                        <asp:DropDownList ID="ddl_supplier" runat="server" CssClass="form-control" style="width:65%"  AutoPostBack="true"></asp:DropDownList>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <span class="text-info">是否入库:</span>
+                        <asp:DropDownList ID="ddl_isInWarehouse" runat="server" 
+                            CssClass="form-control" style="width:50%" AutoPostBack="true">
+                           <asp:ListItem Value="0">全部</asp:ListItem>
+                           <asp:ListItem Value="1">未入库</asp:ListItem>
+                           <asp:ListItem Value="2">已入库</asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-info">关键字:</span>
+                        <input type="text" placeholder="采购单号/合同编号/采购内容/规格/类别" id="txt_searchKey" runat="server" class="form-control" style="width:78%" />
+                    </div>
+                    <div class="col-md-1">
+                        <input type="button" id="btn_Search" runat="server" class="btn btn-primary" value="查询" onclick="SearchClick()"/>
+                    </div>
+                </div>
                 <table id="tableList" class="table-hover"  ></table>
                 <div id="pager1"></div>
         </div>

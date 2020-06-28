@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using System.Data;
 
 public class PurchaseHandler : IHttpHandler {
-    
+
     public void ProcessRequest (HttpContext context) {
         context.Response.ContentType = "text/plain";
         string sql = @"SELECT A.product_id,A.order_id,A.price,A.quantity,A.in_warehouse_date,A.id,B.order_num,D.name AS projectName,E.name AS category,B.contract_id,B.apply_date,A.delivery_date,
@@ -18,13 +18,35 @@ public class PurchaseHandler : IHttpHandler {
         LEFT JOIN tb_code_list D ON (B.project_id = D.id)
         LEFT JOIN tb_code_list E ON (C.product_category_id = E.id)
         LEFT JOIN tb_code_list F ON(F.id = C.product_unit_id)
-        LEFT JOIN tb_code_list G ON (G.id = A.supplier_id) where B.is_disabled <> 1   order by order_num DESC,A.id";
+        LEFT JOIN tb_code_list G ON (G.id = A.supplier_id) where B.is_disabled <> 1 ";
+        if (context.Request["pId"] != "0")
+        {
+            sql += " and B.project_id ='" + context.Request["pId"] + "'";
+        }
+        if (context.Request["pSupplier"] != "0")
+        {
+            sql += " and A.supplier_id ='" + context.Request["pSupplier"] + "'";
+        }
+        if (context.Request["pWarehouse"] == "1")
+        {
+            sql += " and A.in_warehouse_date is null";
+        }
+        if (context.Request["pWarehouse"] == "2")
+        {
+            sql += " and A.in_warehouse_date is not null";
+        }
+        if (!string.IsNullOrEmpty(context.Request["pSearch"]))
+        {
+            sql += @" and (B.order_num like '%{0}%' or B.contract_id like '%{0}%' or C.product_name like '%{0}%' or C.product_size like '%{0}%' or E.name like '%{0}%')";
+            sql = string.Format(sql, context.Request["pSearch"].Trim().Replace(",", ""));
+        }
+        sql += " order by order_num DESC,A.id";
         DataTable tb = DBHelper.GetTableBySql(sql);
         string result = JsonConvert.SerializeObject(tb);
 
         context.Response.Write(result);
     }
- 
+
     public bool IsReusable {
         get {
             return false;
