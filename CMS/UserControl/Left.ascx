@@ -26,6 +26,7 @@
                 <ul style="list-style:none;padding-left:20px">
                     <li><a href="../purchase/PurchaseList.aspx" class="menu-item-detail">采购订单管理</a></li>
                     <li><a href="../purchase/PurchaseDetailList.aspx" class="menu-item-detail">采购订单明细</a></li>
+                    <li><a href="../purchase/PurchaseDetailListForJqGrid.aspx" class="menu-item-detail">采购明细_New</a></li>
                     <li><a href="../purchase/PurchaseOrderReport.aspx" class="menu-item-detail">采购订单汇总</a></li>
                     <li><a href="../product/ProductList.aspx" class="menu-item-detail">商品管理</a></li>
                 </ul>

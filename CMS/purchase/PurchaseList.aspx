@@ -25,7 +25,7 @@
                 </div>
                 <div class="row">
                     <asp:GridView ID="grid_list" runat="server" class="table table-list table-bordered table-hover"
-                         AutoGenerateColumns="false" ShowHeaderWhenEmpty="True" OnRowDataBound="grid_list_RowDataBound">
+                         AutoGenerateColumns="false" ShowHeaderWhenEmpty="True" OnRowDataBound="grid_list_RowDataBound" HeaderStyle-Wrap="false" RowStyle-Wrap="false">
                         <Columns>
                             <asp:TemplateField HeaderText ="序号">
                                 <ItemTemplate >

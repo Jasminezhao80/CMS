@@ -16,6 +16,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using log4net;
+using System.Configuration;
 
 public partial class purchase_PurchaseDetail : System.Web.UI.Page
 {
@@ -32,6 +33,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             if (!string.IsNullOrEmpty(id))
             {
                 Load(Convert.ToInt32(id));
+                this.btnImportProduct.Visible = false;
                 //BindPurchaseDetailGrid(Convert.ToInt32(id));
                 //AsyncPostBackTrigger trigger = new AsyncPostBackTrigger();
                 //trigger.ControlID = this.btnImport.UniqueID;
@@ -111,7 +113,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     [WebMethod]
     public static string GetPurchaseDetail(string orderId)
     {
-        string sql = @"SELECT B.id,A.supplier_id,A.delivery_date,A.unit_price,A.quantity,A.quantity,A.memo,A.price,
+        string sql = @"SELECT B.id,A.supplier_id,A.delivery_date,A.in_warehouse_date,A.unit_price,A.quantity,A.quantity,A.memo,A.price,
                         B.product_num,B.product_name,B.product_size,C.name AS category,D.name AS unit
                         FROM tb_purchase_orderdetail A
                         LEFT JOIN tb_product B ON (A.product_id = B.id)
@@ -136,7 +138,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     public static string GetCheckedProducts(string selectedProductIds,string checkedIds,string rowIndex)
     {
         string sql = @"select A.id,product_num,product_name,product_size,product_category_id,product_unit_id,B.name as category,C.name as unit,
-                        '' as supplier_id, '' as delivery_date,'' as unit_price,'' as quantity,'' as memo,'' as price 
+                        '' as supplier_id, '' as delivery_date,'' as in_warehouse_date, '' as unit_price,'' as quantity,'' as memo,'' as price 
                         from tb_product A  
                         left join tb_code_list B on (A.product_category_id = B.id) 
                         left join tb_code_list C on (A.product_unit_id = C.id) 
@@ -193,11 +195,12 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
         sb.Append("<td><input name='txt_deliveryDate{0}' runat='server' type='date' value='{3}'/></td>");
         sb.Append("<td><input name='txt_unitPrice{0}' runat='server' type='text' style='width:100px' value='{2}'/></td>");
         //sb.Append("<td></td>");
+        sb.Append("<td><input name='txt_warehouseDate{0}' runat='server' type='date' value='{5}'/></td>");
         sb.Append("<td><input name='txt_memo{0}' runat='server' type='text' style='width:100px' value='{4}'/></td>");
         sb.Append("<td><a href='javascript: '><span onclick='delProduct(this)'>删除</span></a></td>");
         sb.Append("</tr>");
 
-        string rowHtml = string.Format(sb.ToString(), new object[] { index, row["quantity"].ToString(), row["unit_price"].ToString(), Common.ConvertToDate(row["delivery_date"]), row["memo"].ToString() }); ;
+        string rowHtml = string.Format(sb.ToString(), new object[] { index, row["quantity"].ToString(), row["unit_price"].ToString(), Common.ConvertToDate(row["delivery_date"]), row["memo"].ToString(), Common.ConvertToDate(row["in_warehouse_date"]) }); ;
         return rowHtml;
     }
     private void BindProductGrid()
@@ -481,6 +484,8 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             }
         }
         cmd.Parameters.Add(access.GetParameter("@deliveryDate", Common.ConvertToDBValue(Request.Form["txt_deliveryDate" + index])));
+        cmd.Parameters.Add(access.GetParameter("@inWarehouseDate", Common.ConvertToDBValue(Request.Form["txt_warehouseDate" + index])));
+
         string unitPrice = Request.Form["txt_unitPrice" + index];
         string quantity = Request.Form["txt_quantity" + index];
         cmd.Parameters.Add(access.GetParameter("@unitPrice", unitPrice));
@@ -511,7 +516,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void UpdateOrderDetail(DBAccess access, DbTransaction transaction, string orderId, int index)
     {
         string sql = @"update tb_purchase_orderDetail set supplier_id=@supplierId,
-                        delivery_date=@deliveryDate,unit_price=@unitPrice,quantity=@quantity,price=@price,memo=@memo 
+                        delivery_date=@deliveryDate,in_warehouse_date=@inWarehouseDate,unit_price=@unitPrice,quantity=@quantity,price=@price,memo=@memo 
                         where order_id=@orderId and product_id=@productId";
         DbCommand cmd = access.CreateCommand(sql, transaction.Connection);
         cmd.Transaction = transaction;
@@ -521,9 +526,9 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void InsertOrderDetail(DBAccess access, DbTransaction transaction, string orderId, int index)
     {
         string sql = @"insert into tb_purchase_orderDetail(order_id,product_id,
-                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader)
+                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader,in_warehouse_date)
                                 values(@orderId,@productId,@supplierId,@deliveryDate,@unitPrice,
-                                @quantity,@price,@memo,@leader)";
+                                @quantity,@price,@memo,@leader,@inWarehouseDate)";
         DbCommand cmd = access.CreateCommand(sql, transaction.Connection);
         cmd.Transaction = transaction;
         SetDetailParameters(cmd, access, orderId, index); ;
@@ -597,7 +602,8 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             detail.DeliveryDate = ((TextBox)row.FindControl("txt_col9")).Text.Trim();
             string unitPrice = ((TextBox)row.FindControl("txt_col10")).Text.Trim();
             detail.UnitPrice = Convert.ToDecimal(string.IsNullOrEmpty(unitPrice) ? "0" : unitPrice);
-            detail.Memo = ((TextBox)row.FindControl("txt_col11")).Text.Trim();
+            detail.InWarehouseDate = ((TextBox)row.FindControl("txt_col11")).Text.Trim();
+            detail.Memo = ((TextBox)row.FindControl("txt_col12")).Text.Trim();
 
             Product product = new Product();
             detail.Product = product;
@@ -700,15 +706,16 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void InsertImportOrderDetail(DBAccess access, DbTransaction transaction, int orderId, PurchaseDetail detail)
     {
         string sql = @"insert into tb_purchase_orderDetail(order_id,product_id,
-                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader)
+                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader,in_warehouse_date)
                                 values(@orderId,@productId,@supplierId,@deliveryDate,@unitPrice,
-                                @quantity,@price,@memo,@leader)";
+                                @quantity,@price,@memo,@leader,@warehouseDate)";
         DbCommand cmd = access.CreateCommand(sql, transaction.Connection);
         cmd.Transaction = transaction;
         cmd.Parameters.Add(access.GetParameter("@orderId", orderId));
         cmd.Parameters.Add(access.GetParameter("@productId", detail.Product.Id));
         cmd.Parameters.Add(access.GetParameter("@supplierId", detail.SupplierId));
         cmd.Parameters.Add(access.GetParameter("@deliveryDate", Common.ConvertToDBValue(detail.DeliveryDate)));
+        cmd.Parameters.Add(access.GetParameter("@warehouseDate", Common.ConvertToDBValue(detail.InWarehouseDate)));
         cmd.Parameters.Add(access.GetParameter("@unitPrice", detail.UnitPrice));
         cmd.Parameters.Add(access.GetParameter("@quantity", detail.Quantity));
         cmd.Parameters.Add(access.GetParameter("@price", detail.UnitPrice * detail.Quantity));
@@ -833,7 +840,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
                     try
                     {
                         ICell cell = sheet.GetRow(i).GetCell(j);
-                        if (j == 8)
+                        if (j == 8 || j==10)
                         {
                             if (cell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(cell))
                             {
@@ -854,5 +861,22 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             }
             return tb;
         }
+    }
+
+    protected void btnDownloadTemplate_ServerClick(object sender, EventArgs e)
+    {
+        string filePath = "c:\\Report\\PurchaseListTemplate.xlsx";
+
+        System.IO.FileInfo file = new System.IO.FileInfo(filePath);
+        Response.Clear();
+        //下载后的文件名
+        Response.AddHeader("Content-Disposition",
+            "attachment;filename=PurchaseListTemplate.xlsx");
+        Response.AddHeader("Content-Length", file.Length.ToString());
+        Response.Charset = "UTF-8";
+        Response.ContentEncoding = System.Text.Encoding.UTF8;
+        Response.ContentType = "application/vnd.ms-excel";
+        Response.WriteFile(filePath);
+        Response.End();
     }
 }

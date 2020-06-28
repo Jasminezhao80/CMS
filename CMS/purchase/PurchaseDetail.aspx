@@ -308,7 +308,7 @@
                             <th>供应商</th>
                             <th>要求交货日期</th>
                             <th>单价</th>
-                            <%--<th>总价</th>--%>
+                            <th>入库日期</th>
                             <th>备注</th>
                             <th>操作</th>
                         </tr>
@@ -322,6 +322,7 @@
                 <%--<asp:Button id ="btnAdd" CssClass="btn btn-primary" Text="添加商品" runat="server" data-toggle="modal" data-target="#div_product"/>--%>
                 <input id="btnAdd" type="button"  class="btn btn-primary" value="添加商品" runat="server" data-toggle="modal" data-target="#div_product" />
                 <input id="btnImportProduct" type="button" class="btn btn-primary" value="导入商品" runat="server" data-toggle="modal" data-target="#div_import" />
+                <input id="btnDownloadTemplate" type="button" class="btn btn-primary" value="下载模板" runat="server" onserverclick="btnDownloadTemplate_ServerClick" style="float:right;margin-right:20px" />
             </div>
             <div class="row text-center">
                <asp:Button id="btnSave" class="btn btn-primary" Text="保存" runat="server" OnClick="btnSave_ServerClick" OnClientClick="return SaveClick()"/>
@@ -546,9 +547,14 @@
                                     <asp:TextBox ID="txt_col10" Text='<%#Eval("col10") %>' runat="server" style="width:80px"></asp:TextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
+                           <asp:TemplateField HeaderText="入库日期">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txt_col11" Text='<%# Eval("col11") is null || Eval("col11") is DBNull || Eval("col11").ToString() == "" ? string.Empty : Convert.ToDateTime(Eval("col11")).ToString("yyyy-MM-dd") %>' runat="server" style="width:80px"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                            <asp:TemplateField HeaderText="备注">
                                 <ItemTemplate>
-                                    <asp:TextBox ID="txt_col11" Text='<%#Eval("col11") %>' runat="server" style="width:80px"></asp:TextBox>
+                                    <asp:TextBox ID="txt_col12" Text='<%#Eval("col12") %>' runat="server" style="width:80px"></asp:TextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
                            </Columns>

@@ -11,13 +11,13 @@
         margin-right: 5px;
     }
 
-    .table-list tr {
+    .table-list tr{
         height: 36px;
         border: 1px solid #d7d7d7;
         /*border:none;*/
     }
 
-    .table-list th {
+    .table-list th{
         height: 38px;
         color: #555354;
         padding-left: 4px;
@@ -29,12 +29,13 @@
         background-color: #dcebf2;
     }
 
-    .table-list td {
+    .table-list td{
         padding-left: 4px;
         padding-right: 2px;
         border: none;
         border-right: dotted 1px #c7c7c7;
     }
+
 .rightPanel {
 margin-top:10px;
 padding-left:15px;
