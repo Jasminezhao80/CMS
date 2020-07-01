@@ -102,4 +102,10 @@ public partial class product_ProductList : System.Web.UI.Page
     {
         BindGrid();
     }
+
+    protected void grid_product_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        grid_product.PageIndex = e.NewPageIndex;
+        BindGrid();
+    }
 }

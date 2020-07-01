@@ -5,11 +5,30 @@ using System.Web;
 using CMS.DB;
 using Newtonsoft.Json;
 using System.Data;
-
+using System.Text;
 public class PurchaseHandler : IHttpHandler {
 
     public void ProcessRequest (HttpContext context) {
         context.Response.ContentType = "text/plain";
+        string function = context.Request["Function"];
+        if (function == "Supplier")
+        {
+            string sqlStr = @"select id,name from tb_code_list where type={0} order by name";
+            sqlStr = string.Format(sqlStr, (int)CodeListType.SupplierName);
+            DataTable supplierTb = DBHelper.GetTableBySql(sqlStr);
+            StringBuilder builder = new StringBuilder();
+
+            if (supplierTb.Rows.Count > 0)
+            {
+                foreach (DataRow row in supplierTb.Rows)
+                {
+                    builder.Append("<option value=" + row["id"] + ">" + row["name"] + "</option>");
+                }
+            }
+            context.Response.Write("<select>"+builder.ToString() + "</select>");
+            return;
+        }
+        //string type = context.Request["cellType"];
         string sql = @"SELECT A.product_id,A.order_id,A.price,A.quantity,A.in_warehouse_date,A.id,B.order_num,D.name AS projectName,E.name AS category,B.contract_id,B.apply_date,A.delivery_date,
         C.product_name,C.product_size,C.product_material,F.name AS unit,A.unit_price,G.name AS supplier,A.leader,A.memo,A.supplier_id 
         FROM tb_purchase_orderdetail A

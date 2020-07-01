@@ -26,7 +26,7 @@ public partial class purchase_PurchaseDetailList : System.Web.UI.Page
                 ddl_project.SelectedValue = searchKeys[0];
                 ddl_supplier.SelectedValue = searchKeys[1];
                 ddl_isInWarehouse.SelectedValue = searchKeys[2];
-                //txt_searchKey.Value = searchKey.Split('_')[3];
+                txt_searchKey.Value = searchKeys[3];
             }
             BindGrid();
         }

@@ -65,7 +65,7 @@
                         <span class="text-info">关键字:</span>
                     </div>
                     <div class="col-md-2">
-                    <input id="txt_contractNum" type ="text" runat="server" class="form-control" style="width:100%"/>
+                    <input id="txt_contractNum" type ="text" runat="server" class="form-control" style="width:100%" placeholder="编号/内容/项目/对象"/>
                     </div>
                     <div class="col-md-1">
                         <input type="button" name="btSearch" value="查询" id="btSearch" runat="server" class="btn btn-primary" onserverclick="btSearch_ServerClick" />   

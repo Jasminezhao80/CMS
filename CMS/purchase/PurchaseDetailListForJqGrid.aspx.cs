@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
@@ -26,9 +27,32 @@ public partial class purchase_PurchaseDetailListForJqGrid : System.Web.UI.Page
                 ddl_project.SelectedValue = searchKeys[0];
                 ddl_supplier.SelectedValue = searchKeys[1];
                 ddl_isInWarehouse.SelectedValue = searchKeys[2];
-                //txt_searchKey.Value = searchKey.Split('_')[3];
+                txt_searchKey.Value = searchKeys[3];
             }
         }
+    }
+    //protected string GetSearchKeys()
+    //{
+    //    string result = string.Format("{0}_{1}_{2}_{3}", ddl_project.SelectedValue, ddl_supplier.SelectedValue, ddl_isInWarehouse.SelectedValue, txt_searchKey.Value.Trim());
+    //    return result;
+    //}
+    [WebMethod]
+    public static string GetSupplier()
+    {
+        string sqlStr = @"select id,name from tb_code_list where type={0} order by name";
+        sqlStr = string.Format(sqlStr, (int)CodeListType.SupplierName);
+        DataTable supplierTb = DBHelper.GetTableBySql(sqlStr);
+        List<string> list = new List<string>();
+
+        if (supplierTb.Rows.Count > 0)
+        {
+            foreach (DataRow row in supplierTb.Rows)
+            {
+                list.Add(row["id"] + ":" + row["name"]);
+            }
+        }
+        return string.Join(";",list.ToArray());
+
     }
     [WebMethod]
     public static string GetJsonString()

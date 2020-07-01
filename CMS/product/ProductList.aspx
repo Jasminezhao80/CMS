@@ -72,7 +72,7 @@
                 </div>
                 <div class="row">
             <asp:GridView ID="grid_product" runat="server" AutoGenerateColumns="false" class="table table-list table-hover" HeaderStyle-Wrap="false"
-                 RowStyle-Wrap="false">
+                 RowStyle-Wrap="false" AllowPaging="true" PageSize="12" OnPageIndexChanging="grid_product_PageIndexChanging">
                 <Columns>
                     <asp:TemplateField HeaderText ="序号">
                         <ItemTemplate>

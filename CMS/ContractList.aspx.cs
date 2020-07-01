@@ -83,8 +83,13 @@ public partial class PurchaseList : System.Web.UI.Page
         }
         if (!string.IsNullOrEmpty(txt_contractNum.Value.Trim()))
         {
-            sql += " and (tb_contract.contract_num like '%" + txt_contractNum.Value.Trim().Replace(",","") + "%' ";
-            sql += " or tb_contract.contract_name like '%" + txt_contractNum.Value.Trim().Replace(",", "") + "%')";
+            string searchText = txt_contractNum.Value.Trim().Replace(",", "");
+            sql += " and (tb_contract.contract_num like '%{0}%' ";
+            sql += " or tb_contract.contract_name like '%{0}%'";
+            sql += " or pType.name like '%{0}%'";
+            sql += " or tb_contract.contract_client like '%{0}%')";
+            sql = string.Format(sql, searchText);
+
         }
         sql += " order by signature_date DESC";
         DataTable tb = DBHelper.GetTableBySql(sql);

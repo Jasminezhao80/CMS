@@ -188,7 +188,7 @@
                     <div class="col-md-2 text-right">
                         <span class="text-info">是否入库:</span>
                         <asp:DropDownList ID="ddl_isInWarehouse" runat="server" OnSelectedIndexChanged="ddl_isInWarehouse_SelectedIndexChanged"
-                            CssClass="form-control" style="width:50%" AutoPostBack="true">
+                            CssClass="form-control" style="width:55%" AutoPostBack="true">
                            <asp:ListItem Value="0">全部</asp:ListItem>
                            <asp:ListItem Value="1">未入库</asp:ListItem>
                            <asp:ListItem Value="2">已入库</asp:ListItem>

@@ -28,22 +28,19 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             Common.DropDownBind(ddl_project, (int)CodeListType.ProjectName, "");
             Common.DropDownBind(ddl_newCategory, (int)CodeListType.ProductCategery,false);
             Common.DropDownBind(ddl_newUnit, (int)CodeListType.ProductUnit, false);
+
             string id = Request.QueryString["id"];
+            //参数id和orderId指的都是orderId,因为从JqGrid页面超链接过来的默认id是detailId,参数名字id不能修改，所以重新传递ordeId
+            //if (!string.IsNullOrEmpty(Request.QueryString["orderId"]))
+            //{
+            //    id = Request.QueryString["orderId"];
+            //}
             orderId.Value = id;//隐藏控件保存id
             if (!string.IsNullOrEmpty(id))
             {
                 Load(Convert.ToInt32(id));
                 this.btnImportProduct.Visible = false;
-                //BindPurchaseDetailGrid(Convert.ToInt32(id));
-                //AsyncPostBackTrigger trigger = new AsyncPostBackTrigger();
-                //trigger.ControlID = this.btnImport.UniqueID;
-                //trigger.EventName = "Click";
-                //this.UpdatePane2.Triggers.Add(trigger);
             }
-            //txt_searchKey.Value = string.Empty;
-            //BindProductGrid();
-            //LogerHelper.Info(typeof(purchase_PurchaseDetail),"Page_Load:!IsPostBack");
-            log.Info("tttttttttt");
         }
     }
     //private void BindPurchaseDetailGrid(int orderId)
@@ -264,7 +261,11 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
         string backType = Request.QueryString["backType"];
         if (!string.IsNullOrEmpty(backType) && backType == "detailList")
         {
-            Response.Redirect("../purchase/PurchaseDetailList.aspx?searchKey="+Request.QueryString["searchKey"]);
+            Response.Redirect("../purchase/PurchaseDetailList.aspx?searchKey=" + Request.QueryString["searchKey"]);
+        }
+        else if (!string.IsNullOrEmpty(backType) && backType == "jqGridDetailList")
+        {
+            Response.Redirect("../purchase/PurchaseDetailListForJqGrid.aspx?searchKey=" + Request.QueryString["searchKey"]);
         }
         else
         {
