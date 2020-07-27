@@ -10,6 +10,14 @@
     <link rel="stylesheet" href="../css/usercontrol.css"/>
     <script src="../js/jquery-3.1.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+                $(document).ready(function () {
+            var screenHeight = document.documentElement.clientHeight;
+            var top =document.getElementById("div_gridPanel").offsetTop;
+            var hight = screenHeight - top -10;
+            document.getElementById("div_gridPanel").style.height = hight + "px";
+        });
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -23,7 +31,7 @@
                         <input id="btnAdd" type="button" runat="server" class="btn btn-primary" value ="+添加新订单" onserverclick="btnAdd_ServerClick" /> 
 
                 </div>
-                <div class="row">
+                <div id="div_gridPanel" class="row" style="overflow-y:scroll;">
                     <asp:GridView ID="grid_list" runat="server" class="table table-list table-bordered table-hover"
                          AutoGenerateColumns="false" ShowHeaderWhenEmpty="True" OnRowDataBound="grid_list_RowDataBound" HeaderStyle-Wrap="false" RowStyle-Wrap="false">
                         <Columns>
@@ -74,16 +82,16 @@
                             </asp:TemplateField>  
                             <asp:TemplateField HeaderText="有效性">
                                 <ItemTemplate>
-                                    <asp:LinkButton ID="btnDisable" runat="server" OnClientClick="javascript:return confirm('确定要废弃此采购单么？')" OnClick="btnDisable_Click" CommandArgument='<%#Eval("id") %>' Text="废弃"></asp:LinkButton>
-                                    <asp:LinkButton ID="btnEnable" runat="server" OnClientClick="javascript:return confirm('确定启用此采购单么？')" OnClick="btnEnable_Click" Text="启用" CommandArgument='<%#Eval("id")%>'></asp:LinkButton>
+                                    <asp:LinkButton ID="btnDisable" Visible='<%#Function.CheckButtonPermission("A020102") %>' runat="server" OnClientClick="javascript:return confirm('确定要废弃此采购单么？')" OnClick="btnDisable_Click" CommandArgument='<%#Eval("id") %>' Text="废弃"></asp:LinkButton>
+                                    <asp:LinkButton ID="btnEnable" Visible='<%#Function.CheckButtonPermission("A020102") %>' runat="server" OnClientClick="javascript:return confirm('确定启用此采购单么？')" OnClick="btnEnable_Click" Text="启用" CommandArgument='<%#Eval("id")%>'></asp:LinkButton>
                                 </ItemTemplate>
                             </asp:TemplateField>
                                              
                             <asp:TemplateField HeaderText="操作" >
                                 <ItemTemplate>
                                     <input type="hidden" id="txt_isDisabled" runat="server" value='<%#Eval("is_disabled") %>' />
-                                    <asp:LinkButton ID="btnEdit"  OnClick="btnEdit_Click" runat="server" CommandArgument='<%#Eval("id") %>' Text ="修改"></asp:LinkButton>
-                                    <asp:LinkButton ID="btnDel" runat="server" OnClick="btnDel_Click" OnClientClick="javascript: return confirm('确定要删除么？')" CommandArgument='<%#Eval("id")%>' Text="删除"></asp:LinkButton>
+                                    <asp:LinkButton ID="btnEdit" Visible='<%#Function.CheckButtonPermission("A020103") %>'  OnClick="btnEdit_Click" runat="server" CommandArgument='<%#Eval("id") %>' Text ="修改"></asp:LinkButton>
+                                    <asp:LinkButton ID="btnDel" Visible='<%#Function.CheckButtonPermission("A020104") %>' runat="server" OnClick="btnDel_Click" OnClientClick="javascript: return confirm('确定要删除么？')" CommandArgument='<%#Eval("id")%>' Text="删除"></asp:LinkButton>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>

@@ -307,11 +307,11 @@
                                     </asp:DropDownList>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="要求交货日期" >
+                           <%-- <asp:TemplateField HeaderText="要求交货日期" >
                                 <ItemTemplate>
                                     <%# Eval("delivery_date") is null || Eval("delivery_date") is DBNull ? string.Empty : Convert.ToDateTime(Eval("delivery_date")).ToString("yyyy-MM-dd") %>
                                 </ItemTemplate>
-                            </asp:TemplateField>
+                            </asp:TemplateField>--%>
                             <asp:TemplateField HeaderText="负责人">
                                 <ItemTemplate>
                                     <%--<asp:TextBox ID="txt_leader" runat="server"></asp:TextBox>--%>

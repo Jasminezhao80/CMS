@@ -25,6 +25,8 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            btnSave.Visible = Function.CheckButtonPermission("A020102");
+
             Common.DropDownBind(ddl_project, (int)CodeListType.ProjectName, "");
             Common.DropDownBind(ddl_newCategory, (int)CodeListType.ProductCategery,false);
             Common.DropDownBind(ddl_newUnit, (int)CodeListType.ProductUnit, false);
@@ -284,7 +286,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void InsertOrder()
     {
         string sql = @"insert into tb_purchase_order (order_num,order_name,contract_id,project_id,
-                        apply_date,memo,leader) values (@num,@name,@contractId,@projectId,@applyDate,@memo,@leader);select @@IDENTITY";
+                        apply_date,memo,leader,create_date,creater) values (@num,@name,@contractId,@projectId,@applyDate,@memo,@leader,Now(),@user);select @@IDENTITY";
         DBAccess access = DBAccess.CreateInstance();
         using (DbConnection conn = access.GetConnection())
         {
@@ -318,7 +320,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void UpdateOrder(string orderId)
     {
         string sql = @"update tb_purchase_order set order_num=@num,order_name=@name,contract_id=@contractId,
-                    project_id=@projectId,apply_date=@applyDate,memo=@memo,leader=@leader
+                    project_id=@projectId,apply_date=@applyDate,memo=@memo,leader=@leader,update_time=Now(),updater=@user 
                     where id = @id";
         DBAccess access = DBAccess.CreateInstance();
         using (DbConnection conn = access.GetConnection())
@@ -512,6 +514,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
         cmd.Parameters.Add(access.GetParameter("@applyDate", Common.ConvertToDBValue(txt_applyDate.Value)));
         cmd.Parameters.Add(access.GetParameter("@leader", txt_leader.Value.Trim()));
         cmd.Parameters.Add(access.GetParameter("@memo", txt_memo.Value.Trim()));
+        cmd.Parameters.Add(access.GetParameter("@user", ((CMS.Model.User)HttpContext.Current.Session["User"]).UserName));
 
     }
     private void UpdateOrderDetail(DBAccess access, DbTransaction transaction, string orderId, int index)
@@ -673,7 +676,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     {
         int orderId;
         string sql = @"insert into tb_purchase_order (order_num,order_name,contract_id,project_id,
-                        apply_date,memo,leader) values (@num,@name,@contractId,@projectId,@applyDate,@memo,@leader);select @@IDENTITY";
+                        apply_date,memo,leader,creater,create_date) values (@num,@name,@contractId,@projectId,@applyDate,@memo,@leader,@user,Now());select @@IDENTITY";
         DBAccess access = DBAccess.CreateInstance();
         using (DbConnection conn = access.GetConnection())
         {

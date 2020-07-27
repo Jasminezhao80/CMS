@@ -70,21 +70,21 @@
                     postData: {pId:ddl_project,pSupplier:ddl_supplier,pWarehouse:ddl_isInWarehouse,pSearch:txt_searchKey},
                     mtype: "post",
                     datatype: "json",
-                     colNames: ['所属项目', '类别', '申购单号','合同编号','申请日期','采购内容','规格','单位','单价','数量','总价','入库日期','供应商','要求交货日期','负责人','备注','商品ID','order_id'],
+                     colNames: ['所属项目', '类别', '申购单号','合同编号','申请日期','采购内容','规格','单位','单价','数量','总价','入库日期','供应商','负责人','备注','商品ID','order_id'],
                     colModel: [{ name: 'projectName', index: 'projectName' },
                     { name: 'category', index: 'category', classes: 'GridCell' },
-                    { name: 'order_num', index: 'order_num', formatter: editLink, formatoptions: { baseLinkUrl: "../purchase/PurchaseDetail.aspx", addParam: '&&orderId=10&&backType=jqGridDetailList' } },
+                    { name: 'order_num', index: 'order_num', width:350,formatter: editLink, formatoptions: { baseLinkUrl: "../purchase/PurchaseDetail.aspx", addParam: '&&orderId=10&&backType=jqGridDetailList' } },
                     //{ name: 'order_num', index: 'order_num', formatter: 'showlink', formatoptions: {baseLinkUrl:"../purchase/PurchaseDetail.aspx",addParam:'&&orderId=10&&backType=jqGridDetailList'} },
                     { name: 'contract_id', index: 'contract_id' },
                     { name: 'apply_date', index: 'apply_date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' } },
-                    { name: 'product_name', index: 'product_name', editable: true, edittype: 'text', editrules: { required: true } },
-                    { name: 'product_size', index: 'product_size', editable: true, edittype: 'text', editrules: { required: true } },
+                    { name: 'product_name', index: 'product_name', editable: false, edittype: 'text', editrules: { required: true } },
+                    { name: 'product_size', index: 'product_size', editable: false, edittype: 'text', editrules: { required: true } },
                     { name: 'unit', index: 'unit' },
-                    { name: 'unit_price', index: 'unit_price', editable: true, edittype: 'text', editrules: { required: false, number: true } },
-                    { name: 'quantity', index: 'quantity', editable: true, edittype: 'text', editrules: { required: true, integer: true } },
+                    { name: 'unit_price', index: 'unit_price', editable: false, edittype: 'text', editrules: { required: false, number: true } },
+                    { name: 'quantity', index: 'quantity', editable: false, edittype: 'text', editrules: { required: true, integer: true } },
                     { name: 'price', index: 'price' },
                     {
-                        name: 'in_warehouse_date', index: 'date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, editable: true, edittype: 'text',
+                        name: 'in_warehouse_date', index: 'date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, editable: false, edittype: 'text',
                         editoptions: {
                             size: 10,
                             dataInit: function (element) {
@@ -109,10 +109,10 @@
                         }
                     },
                     //{ name: 'supplier', index: 'supplier', editable: true, edittype: 'select', editoptions: { dataUrl:"../purchase/PurchaseHandler.ashx?Function=Supplier"} },
-                    { name: 'supplier', index: 'supplier', editable: true, edittype: 'select', editoptions: { value:getSupplier()} },//getSupplier不起作用，没有找到原因
-                        { name: 'delivery_date', index: 'delivery_date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' } },
-                        { name: 'leader', index: 'leader', editable: true,edittype:'text' },
-                        { name: 'memo', index: 'memo',editable: true,edittype:'text' },
+                    { name: 'supplier', index: 'supplier', editable: false, edittype: 'select', editoptions: { value:getSupplier()} },//getSupplier不起作用，没有找到原因
+                        //{ name: 'delivery_date', index: 'delivery_date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' } },
+                        { name: 'leader', index: 'leader', editable: false, edittype: 'text' },
+                        { name: 'memo', index: 'memo',editable: false,edittype:'text' },
                         { name: 'product_id', index: 'product_id', hidedlg: true, hidden: true },
                         { name: 'order_id', index: 'order_id', hidden: true }
 
@@ -129,8 +129,45 @@
                     rownumbers: true,
                     height: hight,
                     rownumWidth:40,
-                    cellEdit:true,
+                    cellEdit: true,
+                    shrinkToFit: true,
+                    ondblClickRow: function (rowid, iRow, iCol, e) {
+                        var flag = "<%=editFlag%>";
+                        if (flag == "False") {
+                            return;
+                        }
+                        if (iCol == 6) {
+                            $("#tableList").setColProp("product_name",{editable:true});
+                        }
+                        if (iCol == 7) {
+                            $("#tableList").setColProp("product_size",{editable:true});
+                        }
+                        if (iCol == 9) {
+                            $("#tableList").setColProp("unit_price",{editable:true});
+                        }
+                        if (iCol == 10) {
+                            $("#tableList").setColProp("quantity",{editable:true});
+                        }
+                        if (iCol == 12) {
+                            $("#tableList").setColProp("in_warehouse_date",{editable:true});
+                        }
+                        if (iCol == 13) {
+                            $("#tableList").setColProp("supplier",{editable:true});
+                        }
+                        if (iCol == 14) {
+                            $("#tableList").setColProp("leader",{editable:true});
+                        }
+                        if (iCol == 15) {
+                            $("#tableList").setColProp("memo",{editable:true});
+                        }
+                    },
                     afterSaveCell: function (rowid, name, val, iRow, iCol) {
+                        var flag = "<%=editFlag%>";
+                        //alert(flag);
+                        if (flag == "False") {
+                            alert("此账号没有修改权限！");
+                            return;
+                        }
                         switch (name) {
                             case "quantity":
                                     $.ajax({
@@ -140,8 +177,13 @@
                                     data: "{'id':"+rowid +",'quantity':" + val+"}",
                                     dataType: "json",
                                     contentType: "application/json; charset=utf-8",
-                                    success: function (result) {
-                                        alert("修改成功！");
+                                        success: function (result) {
+                                            var unitPrice = $("#tableList").getCell(rowid, 'unit_price');
+                                            $("#tableList").jqGrid('setCell', rowid, "price", (unitPrice*val).toFixed(2));
+                                        $("#tableList").setColProp(name, { editable: { value: "True:False" } });
+                                        },
+                                    error: function (err) {
+                                        alert("修改失败！");
                                     }
 
                                 });
@@ -155,7 +197,12 @@
                                     dataType: "json",
                                     contentType: "application/json; charset=utf-8",
                                     success: function (result) {
-                                        alert("修改成功！");
+                                        var quantity = $("#tableList").getCell(rowid, 'quantity');
+                                        $("#tableList").jqGrid('setCell', rowid, "price", (quantity * val).toFixed(2));
+                                        $("#tableList").setColProp(name, { editable: { value: "True:False" } });
+                                    },
+                                    error: function (err) {
+                                        alert("修改失败！");
                                     }
                                 });
                                 break;
@@ -170,7 +217,10 @@
                                     contentType: "application/json; charset=utf-8",
                                     data: "{'id':" + rowid + ",'productId':" + productId + ",'value':'" + val + "','item':'name'}",
                                     success: function (res) {
-                                        alert("修改成功！");
+                                        $("#tableList").setColProp(name, { editable: {value:"True:False"} });
+                                    },
+                                    error: function (err) {
+                                        alert("修改失败！");
                                     }
                                 });
                                 break;
@@ -184,7 +234,10 @@
                                     contentType: "application/json; charset=utf-8",
                                     data: "{'id':" + rowid + ",'productId':" + productId + ",'value':'" + val + "','item':'size'}",
                                     success: function (res) {
-                                        alert("修改成功！");
+                                        $("#tableList").setColProp(name, { editable: {value:"True:False"} });
+                                    },
+                                    error: function (err) {
+                                        alert("修改失败！");
                                     }
                                 });
                                 break;
@@ -196,8 +249,11 @@
                                     data: "{'id':" + rowid + ",'date':'" + val + "'}",
                                     dataType: "json",
                                     contentType: "application/json; charset=utf-8",
-                                    success: function (result) {
-                                        alert("修改成功！");
+                                    success: function (res) {
+                                        $("#tableList").setColProp(name, { editable: {value:"True:False"} });
+                                    },
+                                    error: function (err) {
+                                        alert("修改失败！");
                                     }
                                 });
                                 break;
@@ -209,8 +265,11 @@
                                     data: "{'id':"+rowid +",'value':'" + val+"','item':'supplier_id'}",
                                     dataType: "json",
                                     contentType: "application/json; charset=utf-8",
-                                    success: function (result) {
-                                        alert("修改成功！");
+                                    success: function (res) {
+                                        $("#tableList").setColProp(name, { editable: {value:"True:False"} });
+                                    },
+                                    error: function (err) {
+                                        alert("修改失败！");
                                     }
 
                                 });
@@ -224,8 +283,11 @@
                                     data: "{'id':"+rowid +",'value':'" + val+"','item':'"+name + "'}",
                                     dataType: "json",
                                     contentType: "application/json; charset=utf-8",
-                                    success: function (result) {
-                                        alert("修改成功！");
+                                    success: function (res) {
+                                        $("#tableList").setColProp(name, { editable: {value:"True:False"} });
+                                    },
+                                    error: function (err) {
+                                        alert("修改失败！");
                                     }
 
                                 });
@@ -275,6 +337,7 @@
     <UC:Top runat="server" ID="Top" />
     <UC:Left runat="server" ID="Left" />
         <div id="div_rightPanel" class="rightPanel">
+            <div class="container-fluid">
                 <div class="row form-inline form-group">
                     <div class="col-md-3 ">
 
@@ -302,8 +365,11 @@
                         <input type="button" id="btn_Search" runat="server" class="btn btn-primary" value="查询" onclick="SearchClick()"/>
                     </div>
                 </div>
-                <table id="tableList" style="font-weight:normal;"  ></table>
+                <div class="row">
+                <table id="tableList" style="font-weight:normal;width:100%"  ></table>
                 <div id="pager1"></div>
+                </div>
+            </div>
         </div>
 
 

@@ -16,6 +16,9 @@ public partial class PurchaseList : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            //按钮权限
+            btnAdd.Visible = Function.CheckButtonPermission("A020101");
+
             BindGrid();
         }
     }

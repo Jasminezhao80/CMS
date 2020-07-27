@@ -190,9 +190,9 @@
                         <ItemStyle HorizontalAlign="Center" />
                         <ItemTemplate>
 <%--                            <a href="Default.aspx">详细</a>--%>
-                            <asp:LinkButton ID="btnUpdate" runat="server" OnClick="btnUpdate_Click" CommandArgument='<%#Eval("id") %>'>修改</asp:LinkButton>
+                            <asp:LinkButton ID="btnUpdate" runat="server" OnClick="btnUpdate_Click" Visible='<%#Function.CheckButtonPermission("A010102") %>' CommandArgument='<%#Eval("id") %>'>修改</asp:LinkButton>
                             <%--<asp:LinkButton ID="btnEdit" runat="server" CommandName="Edit" Text="编辑"></asp:LinkButton>--%>
-                            <asp:LinkButton ID="btnDel" runat="server" OnClick="btnDel_Click" CommandArgument='<%#Eval("id") %>' OnClientClick="javascript:return confirm('确定要删除么？')">删除</asp:LinkButton>
+                            <asp:LinkButton ID="btnDel" runat="server" OnClick="btnDel_Click" Visible='<%#Function.CheckButtonPermission("A010103") %>' CommandArgument='<%#Eval("id") %>' OnClientClick="javascript:return confirm('确定要删除么？')">删除</asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>

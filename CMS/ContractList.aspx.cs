@@ -35,9 +35,13 @@ public partial class PurchaseList : System.Web.UI.Page
                 txt_contractNum.Value = searchStr[5];
             }
             GridDataBind();
+            //添加新合同权限
+            this.btNew.Visible = Function.CheckButtonPermission("A010101");
+            btSearch.Visible = Function.CheckButtonPermission("A010104");
 
         }
     }
+
     protected string GetSearchQueryStr()
     {
         return string.Format("{0}_{1}_{2}_{3}_{4}_{5}", new object[] { ddl_category.SelectedItem.Value,ddl_type.SelectedItem.Value,ddl_project.SelectedItem.Value,
@@ -60,7 +64,7 @@ public partial class PurchaseList : System.Web.UI.Page
                             left join tb_code_list c on (c.id = tb_contract.contract_type) 
                             left join tb_code_list codeList on(codeList.id = tb_contract.is_appointment)
                             left join tb_code_list cdList on (cdList.id = tb_contract.is_complete)  
-                            where 1=1";
+                            where delFlag=0";
         if (ddl_category.SelectedItem.Value != "0")
         {
             sql += string.Format(" and tb_contract.contract_type = '{0}'", ddl_category.SelectedItem.Value);
@@ -163,13 +167,16 @@ public partial class PurchaseList : System.Web.UI.Page
     protected void btnDel_Click(object sender, EventArgs e)
     {
         DBAccess access = DBAccess.CreateInstance();
-        string delSql = @"delete from tb_contract where id =@id";
+        //string delSql = @"delete from tb_contract where id =@id";
+        string delSql = @"update tb_contract set delFlag=1,deleter=@user,delete_time=Now() where id =@id";
         using (DbConnection conn = access.GetConnection())
         {
             
             conn.Open();
             DbCommand cmd = access.CreateCommand(delSql, conn);
             cmd.Parameters.Add(access.GetParameter("@id", (sender as LinkButton).CommandArgument));
+            cmd.Parameters.Add(access.GetParameter("@user", ((CMS.Model.User)HttpContext.Current.Session["User"]).UserName));
+
             access.ExecuteNonQuery(cmd);
         }
         GridDataBind();

@@ -28,6 +28,9 @@ public partial class SummaryReport : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            //按钮权限
+            this.btnSearch.Visible = Function.CheckButtonPermission("A010202");
+            btnReport.Visible = Function.CheckButtonPermission("A010201");
             DateTime lastSaturday = DateTime.Now;
             DateTime now = DateTime.Now;
             int week = Convert.ToInt32(now.DayOfWeek);
@@ -101,14 +104,14 @@ public partial class SummaryReport : System.Web.UI.Page
                         count(case when (first_date < GETDATE() and first_pay_date is null) or (second_date < GETDATE() and second_pay_date is null) or (third_date < GETDATE() and third_pay_date is null) or (fourth_date < GETDATE() and fourth_pay_date is null) or (last_date < GETDATE() and last_pay_date is null) then 1 else null end) as delayCount 
                         from tb_contract
                         inner join tb_code_list typeCode on (typeCode.id=tb_contract.purchase_type)
-                        where tb_contract.contract_type = {2}
+                        where tb_contract.contract_type = {2} and tb_contract.delFlag=0 
                         group by typeCode.name
                         union all 
                         (select projectCode.name as type,count(*) as contractCount,count(case when tb_contract.is_complete={4} then 1 else null end) as completeCount,count(case when tb_contract.signature_date >= '{0}' and tb_contract.signature_date <= '{1}' then 1 else null end) as weekAdded,count(case when tb_contract.finish_date >= '{0}' and tb_contract.finish_date <= '{1}' then 1 else null end) as weekComplete,
                         count(case when (first_date < GETDATE() and first_pay_date is null) or (second_date < GETDATE() and second_pay_date is null) or (third_date < GETDATE() and third_pay_date is null) or (fourth_date < GETDATE() and fourth_pay_date is null) or (last_date < GETDATE() and last_pay_date is null) then 1 else null end) as delayCount                         
                         from tb_contract
                         inner join tb_code_list projectCode on (projectCode.id=tb_contract.project_code)
-                        where tb_contract.contract_type = {3}
+                        where tb_contract.contract_type = {3} and tb_contract.delFlag=0 
                         group by projectCode.name)";
         sql = string.Format(sql, new object[] { weekFrom.Value, weekTo.Value,(int)CodeList.ContractType_Purchase,(int)CodeList.ContractType_Project,(int)CodeList.IsTrue_Y});
         GridView1.DataSource = DBHelper.GetTableBySql(sql);
@@ -122,7 +125,7 @@ public partial class SummaryReport : System.Web.UI.Page
         from tb_contract
         left join tb_code_list pCode on (pCode.id = tb_contract.project_code)
         left join tb_code_list cCode on (cCode.id = tb_contract.purchase_type)
-        where contract_type = '{0}' and ((first_date < GETDATE() and first_pay_date is null) or (second_date < GETDATE() and second_pay_date is null) or (third_date < GETDATE() and third_pay_date is null) or (fourth_date < GETDATE() and fourth_pay_date is null) or (last_date < GETDATE() and last_pay_date is null))";
+        where tb_contract.delFlag=0 and contract_type = '{0}' and ((first_date < GETDATE() and first_pay_date is null) or (second_date < GETDATE() and second_pay_date is null) or (third_date < GETDATE() and third_pay_date is null) or (fourth_date < GETDATE() and fourth_pay_date is null) or (last_date < GETDATE() and last_pay_date is null))";
         sql = string.Format(sql, type);
         DataTable tb = DBHelper.GetTableBySql(sql);
         if (tb.Rows.Count > 0)
@@ -199,7 +202,7 @@ public partial class SummaryReport : System.Web.UI.Page
         from tb_contract
         left join tb_code_list pCode on (pCode.id = tb_contract.project_code)
         left join tb_code_list cCode on (cCode.id = tb_contract.purchase_type)
-        where contract_type = '{2}' and (((first_date >= '{0}' and first_date <= '{1}') and first_pay_date is null) or (second_date >= '{0}' and second_date <= '{1}' and second_pay_date is null) or (third_date >= '{0}' and third_date <= '{1}' and third_pay_date is null) or (fourth_date >= '{0}' and fourth_date <= '{1}' and fourth_pay_date is null) or (last_date >= '{0}' and last_date <= '{1}' and last_pay_date is null))";
+        where contract_type = '{2}' and tb_contract.delFlag=0 and (((first_date >= '{0}' and first_date <= '{1}') and first_pay_date is null) or (second_date >= '{0}' and second_date <= '{1}' and second_pay_date is null) or (third_date >= '{0}' and third_date <= '{1}' and third_pay_date is null) or (fourth_date >= '{0}' and fourth_date <= '{1}' and fourth_pay_date is null) or (last_date >= '{0}' and last_date <= '{1}' and last_pay_date is null))";
         sql = string.Format(sql, nextWeekFrom.Value,nextWeekTo.Value, type);
         DataTable tb = DBHelper.GetTableBySql(sql);
         if (tb.Rows.Count > 0)
@@ -279,7 +282,7 @@ public partial class SummaryReport : System.Web.UI.Page
                     FROM tb_contract 
                     LEFT JOIN tb_code_list pcode ON (tb_contract.purchase_type = pcode.id) 
                     LEFT JOIN tb_code_list proCode ON (tb_contract.project_code = proCode.id) 
-                    WHERE signature_date >= '{0}' AND signature_date <= '{1}'";
+                    WHERE tb_contract.delFlag=0 and signature_date >= '{0}' AND signature_date <= '{1}'";
         sql = string.Format(sql, weekFrom.Value, weekTo.Value);
         GridView6.DataSource = DBHelper.GetTableBySql(sql);
         GridView6.DataBind();

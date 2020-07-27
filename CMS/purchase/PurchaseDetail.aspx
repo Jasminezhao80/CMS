@@ -44,8 +44,9 @@
                 //}
                 name = "txt_quantity" + len;
                 var qty = $(this).find("input[name='" + name + "']").val();
-                if (qty == "" || qty == "0") {
-                    alert("请输入每种商品的采购数量！");
+                //if (qty == "" || qty == "0") {
+                if (parseFloat(qty).toString() == "NaN"||parseFloat(qty) == 0) {
+                    alert("请输入第"+len+"行商品的采购数量！");
                     flag = false;
                     return false;
                 }
@@ -325,7 +326,7 @@
                 <input id="btnDownloadTemplate" type="button" class="btn btn-primary" value="下载模板" runat="server" onserverclick="btnDownloadTemplate_ServerClick" style="float:right;margin-right:20px" />
             </div>
             <div class="row text-center">
-               <asp:Button id="btnSave" class="btn btn-primary" Text="保存" runat="server" OnClick="btnSave_ServerClick" OnClientClick="return SaveClick()"/>
+               <asp:Button id="btnSave" Visible='<%#Function.CheckButtonPermission("A020102") %>' class="btn btn-primary" Text="保存" runat="server" OnClick="btnSave_ServerClick" OnClientClick="return SaveClick()"/>
                 <asp:Button id="btnCancel" class="btn btn-primary" Text="取消" runat="server" OnClick="btnCancel_ServerClick"/>
 
             </div>

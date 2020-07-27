@@ -11,8 +11,14 @@
     <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         function SaveClick() {
-            alert("保存成功！");
-            window.location.href = 'ContractList.aspx?contractNum=' + $("#contractNum").val();
+            if ($("#contractName").val() == "") {
+                alert("请输入合同内容！");
+                return false;
+            };
+            if ($("#contractNum").val()==""){
+                alert("请输入合同编号！");
+                return false;
+                }
         };
         function selectChange(ddl,txtAmount) {
             var totalSum = $("#totalSum").val();
@@ -74,7 +80,7 @@
                         </asp:DropDownList>                   
                    </div>
                     <div class="col-md-2 text-right">
-                        <span class="text-info">合同编号:</span>
+                        <span class="text-info"><span style="color:red">*</span> 合同编号:</span>
                     </div>              
                     <div class="col-md-3">
                         <input type="text" id="contractNum" class="form-control" runat="server"/>
@@ -83,7 +89,7 @@
                </div>
                <div class="row form-group">
                     <div class="col-md-2 text-right">
-                        <span class="text-info">合同内容摘要:</span>
+                        <span class="text-info"><span style="color:red">*</span> 合同内容摘要:</span>
                     </div>
                    <div class="col-md-3">
                         <input id="contractName" runat="server" type="text" class="form-control"/>                  
@@ -308,7 +314,7 @@
 
                </div>
               <div class="row text-center">
-                        <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-primary" OnClick="btnSave_Click"  />
+                        <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-primary" OnClick="btnSave_Click" OnClientClick="return SaveClick();"  />
                         <asp:Button ID="btnCancel" runat="server" Text="取消" CssClass="btn btn-primary" OnClick ="btnCancel_Click" />
 
               </div>     

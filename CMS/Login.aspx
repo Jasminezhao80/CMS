@@ -29,20 +29,20 @@
                 return false;
             }
 
-            if ($("#txtUserName").val() != "admin") {
-                alert("用户名不存在！");
-                return false;
-            }
+            //if ($("#txtUserName").val() != "admin") {
+            //    alert("用户名不存在！");
+            //    return false;
+            //}
 
             if ($("#txtPass").val() == "") {
                 alert("请输入密码！")
                 return false;
             }
 
-            if ($("#txtPass").val() != "123") {
-                alert("密码不正确！")
-                return false;
-            }
+            //if ($("#txtPass").val() != "123") {
+            //    alert("密码不正确！")
+            //    return false;
+            //}
         }
     </script>
 </head>
@@ -54,11 +54,11 @@
                    <h2>用户登录</h2>
                 </div>
                 <div class="form-group has-success has-feedback">
-                    <input type="text" class="form-control" id="txtUserName" placeholder="用户名"/>
+                    <input type="text" class="form-control"  runat="server" id="txtUserName" placeholder="用户名"/>
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-success has-feedback">
-                    <input type="password" class="form-control" id="txtPass" placeholder="密码" />
+                    <input type="password" class="form-control" id="txtPass" placeholder="密码" runat="server" />
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="form-check">

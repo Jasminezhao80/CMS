@@ -12,10 +12,12 @@ using Newtonsoft.Json;
 
 public partial class purchase_PurchaseDetailListForJqGrid : System.Web.UI.Page
 {
+    public bool editFlag;
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
+            editFlag =Function.CheckButtonPermission("A020202");
             Common.DropDownBind(ddl_project, (int)CodeListType.ProjectName, true);
             Common.DropDownBind(ddl_supplier, (int)CodeListType.SupplierName, true);
             string sql = @"select id,name from tb_code_list where type={0} order by name";
@@ -31,11 +33,10 @@ public partial class purchase_PurchaseDetailListForJqGrid : System.Web.UI.Page
             }
         }
     }
-    //protected string GetSearchKeys()
-    //{
-    //    string result = string.Format("{0}_{1}_{2}_{3}", ddl_project.SelectedValue, ddl_supplier.SelectedValue, ddl_isInWarehouse.SelectedValue, txt_searchKey.Value.Trim());
-    //    return result;
-    //}
+    protected bool CheckEditPermission()
+    {
+        return Function.CheckButtonPermission("A020202");
+    }
     [WebMethod]
     public static string GetSupplier()
     {

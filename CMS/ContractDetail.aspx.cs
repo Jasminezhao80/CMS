@@ -16,6 +16,8 @@ public partial class _Default : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            //保存按钮权限
+            btnSave.Visible = Function.CheckButtonPermission("A010102");
             FillPercentageDDL();
             if (Request.QueryString["search"] != null)
             {
@@ -122,11 +124,11 @@ public partial class _Default : System.Web.UI.Page
                             first_date,first_amount,second_date,second_amount,third_date,third_amount,last_date,last_amount,memo,
                             contract_client,is_appointment,is_complete,first_pay_date,first_pay_amount,
                             second_pay_date,second_pay_amount,third_pay_date,third_pay_amount,last_pay_date,last_pay_amount,leader,
-                            delivery_date,signature_date,fourth_date,fourth_amount,fourth_pay_date,fourth_pay_amount,money_type,is_delivery,create_time)
+                            delivery_date,signature_date,fourth_date,fourth_amount,fourth_pay_date,fourth_pay_amount,money_type,is_delivery,create_time,creater)
                         values(@contractType,@type,@name,@num,@project,@amount,@firstDate,@firstAmount,@secondDate,@secondAmount,
                                 @thirdDate,@thirdAmount,@lastDate,@lastAmount,@memo,@client,@appointment,@complete,
                             @firstPayDate,@firstPayAmount,@secondPayDate,@secondPayAmount,@thirdPayDate,@thirdPayAmount,
-                            @lastPayDate,@lastPayAmount,@leader,@deliveryDate,@signatureDate,@fourthDate,@fourthAmount,@fourthPayDate,@fourthPayAmount,@moneyType,@isDelivery,Now())";
+                            @lastPayDate,@lastPayAmount,@leader,@deliveryDate,@signatureDate,@fourthDate,@fourthAmount,@fourthPayDate,@fourthPayAmount,@moneyType,@isDelivery,Now(),@user)";
 
             }
             else
@@ -141,7 +143,7 @@ public partial class _Default : System.Web.UI.Page
                                 second_pay_amount=@secondPayAmount,third_pay_date=@thirdPayDate,third_pay_amount=@thirdPayAmount,
                                 last_pay_date=@lastPayDate,last_pay_amount=@lastPayAmount,leader=@leader,delivery_date=@deliveryDate,
                                 signature_date=@signatureDate,fourth_date=@fourthDate,fourth_amount=@fourthAmount,
-                                fourth_pay_date=@fourthPayDate,fourth_pay_amount=@fourthPayAmount,money_type=@moneyType,is_delivery=@isDelivery,update_time=Now()    
+                                fourth_pay_date=@fourthPayDate,fourth_pay_amount=@fourthPayAmount,money_type=@moneyType,is_delivery=@isDelivery,update_time=Now(),updater=@user     
                                 where id=" + id;
             }
             DBAccess access = DBAccess.CreateInstance();
@@ -189,6 +191,8 @@ public partial class _Default : System.Web.UI.Page
                 cmd.Parameters.Add(access.GetParameter("@fourthPayDate", ConvertToDBValue(fourthPayDate.Value)));
                 cmd.Parameters.Add(access.GetParameter("@fourthPayAmount", txt_fourthPay.Value));
                 cmd.Parameters.Add(access.GetParameter("@moneyType", ddl_moneyTypy.SelectedItem.Value));
+                cmd.Parameters.Add(access.GetParameter("@user", ((CMS.Model.User)HttpContext.Current.Session["User"]).UserName));
+
                 access.ExecuteNonQuery(cmd);
 
             }
