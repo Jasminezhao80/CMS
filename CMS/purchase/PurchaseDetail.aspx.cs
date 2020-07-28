@@ -308,6 +308,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
                     }
                     InsertOrderDetail(access, transaction, orderId.ToString(), i);
                 }
+                UpdateAmount(orderId, transaction, access, conn);
                 transaction.Commit();
             }
             catch (Exception ex)
@@ -317,6 +318,16 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             }
             Response.Redirect("../purchase/PurchaseList.aspx");
         }
+    }
+    private static void UpdateAmount(int orderId, DbTransaction trans, DBAccess ac, DbConnection conn)
+    {
+        string sql = @"UPDATE tb_purchase_order A INNER JOIN
+                        (SELECT order_id,SUM(price) price FROM tb_purchase_orderdetail
+                        GROUP BY order_id) B ON(A.id = B.order_id)
+                        SET A.amount = B.price where A.id = {0}";
+        DbCommand cmd = ac.CreateCommand(string.Format(sql, orderId), conn);
+        cmd.Transaction = trans;
+        ac.ExecuteNonQuery(cmd);
     }
     private void UpdateOrder(string orderId)
     {
@@ -376,6 +387,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
                     cmd.Transaction = transaction;
                     access.ExecuteNonQuery(cmd_leader);
                 }
+                UpdateAmount(Int32.Parse(orderId), transaction, access, conn);
                 transaction.Commit();
             }
             catch (Exception ex)
@@ -698,6 +710,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
                     }
                     InsertImportOrderDetail(access, transaction, orderId, detail);
                 }
+                UpdateAmount(orderId, transaction, access, conn);
                 transaction.Commit();
             }
             catch (Exception ex)

@@ -124,11 +124,33 @@ public partial class purchase_PurchaseDetailList : System.Web.UI.Page
         using (DbConnection conn = ac.GetConnection())
         {
             conn.Open();
-            DbCommand cmd = ac.CreateCommand(sql, conn);
-            cmd.Parameters.Add(ac.GetParameter("@id", id));
-            cmd.Parameters.Add(ac.GetParameter("@price", price));
-            ac.ExecuteNonQuery(cmd);
+            DbTransaction trans = conn.BeginTransaction();
+            try
+            {
+                DbCommand cmd = ac.CreateCommand(sql, conn);
+                cmd.Parameters.Add(ac.GetParameter("@id", id));
+                cmd.Parameters.Add(ac.GetParameter("@price", price));
+                ac.ExecuteNonQuery(cmd);
+                UpdateAmount(id, trans, ac, conn);
+                trans.Commit();
+            }
+            catch (Exception ex)
+            {
+                trans.Rollback();
+                throw ex;
+            }
         }
+    }
+    public static void UpdateAmount(int detailId, DbTransaction trans, DBAccess ac, DbConnection conn)
+    {
+        string sql = @"UPDATE tb_purchase_order A INNER JOIN
+                        (SELECT order_id,SUM(price) price FROM tb_purchase_orderdetail
+                        GROUP BY order_id) B ON(A.id = B.order_id)
+                        INNER JOIN tb_purchase_orderdetail C ON (C.id = {0} AND A.id = C.order_id)
+                        SET A.amount = B.price";
+        DbCommand cmd = ac.CreateCommand(string.Format(sql, detailId), conn);
+        cmd.Transaction = trans;
+        ac.ExecuteNonQuery(cmd);
     }
     [WebMethod]
     public static void SaveQuantity(int id, int quantity)
@@ -138,10 +160,22 @@ public partial class purchase_PurchaseDetailList : System.Web.UI.Page
         using (DbConnection conn = ac.GetConnection())
         {
             conn.Open();
-            DbCommand cmd = ac.CreateCommand(sql, conn);
-            cmd.Parameters.Add(ac.GetParameter("@id", id));
-            cmd.Parameters.Add(ac.GetParameter("@quantity", quantity));
-            ac.ExecuteNonQuery(cmd);
+            DbTransaction trans = conn.BeginTransaction();
+            try
+            {
+
+                DbCommand cmd = ac.CreateCommand(sql, conn);
+                cmd.Parameters.Add(ac.GetParameter("@id", id));
+                cmd.Parameters.Add(ac.GetParameter("@quantity", quantity));
+                ac.ExecuteNonQuery(cmd);
+                UpdateAmount(id, trans, ac, conn);
+                trans.Commit();
+            }
+            catch (Exception ex)
+            {
+                trans.Rollback();
+                throw ex;
+            }
         }
     }
 
