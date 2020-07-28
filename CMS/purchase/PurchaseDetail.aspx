@@ -282,7 +282,7 @@
                     <span class="text-info ">总金额:</span>
                 </div>
                 <div class="col-md-3">
-                   <input class="form-control" runat ="server" type="text"/>
+                   <input id="txt_amount" class="form-control" runat ="server" type="text"  readonly="true"/>
                 </div>
             </div>
             <div class="row form-group">

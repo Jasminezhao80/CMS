@@ -17,7 +17,7 @@ public partial class Login : System.Web.UI.Page
 
     protected void btnLogin_Click(object sender, EventArgs e)
     {
-        string sql = "select * from tb_users where name ='{0}' and password={1}";
+        string sql = "select * from tb_users where name ='{0}' and password='{1}'";
         sql = string.Format(sql, this.txtUserName.Value, this.txtPass.Value);
         DataTable tb = DBHelper.GetTableBySql(sql);
         if (tb.Rows.Count > 0)

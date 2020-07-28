@@ -131,11 +131,59 @@
                     rownumWidth:40,
                     cellEdit: true,
                     shrinkToFit: true,
+                    //onCellSelect: function (rowid,iCol,cellcontent,e) {
+                    //    //alert("afterEditCell" + cellname + "值："+value);
+                    //    //$("#tableList").trigger("reloadGrid");
+                    //    alert("onCellSelect");
+                    //    $("#tableList").setColProp("product_size",{editable:false});
+                    //},
+                    beforeEditCell:function (rowid, cellname, v, iRow, iCol) {
+                                                   $("#tableList").setColProp("product_name",{editable:false});
+                            $("#tableList").setColProp("product_size",{editable:false});
+
+                            $("#tableList").setColProp("unit_price",{editable:false});
+
+                            $("#tableList").setColProp("quantity",{editable:false});
+
+                            $("#tableList").setColProp("in_warehouse_date",{editable:false});
+
+                            $("#tableList").setColProp("supplier",{editable:false});
+
+                            $("#tableList").setColProp("leader",{editable:false});
+
+                            $("#tableList").setColProp("memo",{editable:false});
+                    },
+                    afterEditCell:function (rowid, cellname, v, iRow, iCol) {
+
+                            $("#tableList").setColProp("product_name",{editable:false});
+                            $("#tableList").setColProp("product_size",{editable:false});
+
+                            $("#tableList").setColProp("unit_price",{editable:false});
+
+                            $("#tableList").setColProp("quantity",{editable:false});
+
+                            $("#tableList").setColProp("in_warehouse_date",{editable:false});
+
+                            $("#tableList").setColProp("supplier",{editable:false});
+
+                            $("#tableList").setColProp("leader",{editable:false});
+
+                            $("#tableList").setColProp("memo",{editable:false});
+
+                        //}
+                        //if (cellname == "product_name") {
+                        //    $("#tableList").setColProp("product_size",{editable:false});
+                        //}
+                        //$("#tableList").trigger("reloadGrid");
+                    },
                     ondblClickRow: function (rowid, iRow, iCol, e) {
+                        //alert("ondblClickRow");
                         var flag = "<%=editFlag%>";
                         if (flag == "False") {
                             return;
                         }
+                        //$("#tableList").setCell(rowid, "product_name", "", "", { editable:true});
+                        //alert("ondblClickRow");
                         if (iCol == 6) {
                             $("#tableList").setColProp("product_name",{editable:true});
                         }
@@ -217,7 +265,7 @@
                                     contentType: "application/json; charset=utf-8",
                                     data: "{'id':" + rowid + ",'productId':" + productId + ",'value':'" + val + "','item':'name'}",
                                     success: function (res) {
-                                        $("#tableList").setColProp(name, { editable: {value:"True:False"} });
+                                        $("#tableList").setColProp(name, { editable: false });
                                     },
                                     error: function (err) {
                                         alert("修改失败！");

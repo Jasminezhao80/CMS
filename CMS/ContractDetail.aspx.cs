@@ -16,8 +16,8 @@ public partial class _Default : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            //保存按钮权限
-            btnSave.Visible = Function.CheckButtonPermission("A010102");
+            SetSaveButtonPermission();
+
             FillPercentageDDL();
             if (Request.QueryString["search"] != null)
             {
@@ -110,6 +110,21 @@ public partial class _Default : System.Web.UI.Page
                 ddl_type.SelectedValue = purchaseType;
 
             }
+        }
+    }
+    private void SetSaveButtonPermission()
+    {
+        string id = Request.QueryString["contractId"];
+        //保存按钮权限
+        if (string.IsNullOrEmpty(id))
+        {
+            //新增权限
+            btnSave.Visible = Function.CheckButtonPermission("A010101");
+        }
+        else
+        {
+            //修改权限
+            btnSave.Visible = Function.CheckButtonPermission("A010102");
         }
     }
     protected void btnSave_Click(object sender, EventArgs e)

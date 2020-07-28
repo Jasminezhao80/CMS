@@ -74,6 +74,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             txt_leader_old.Value = row["leader"].ToString();
             txt_memo.Value = row["memo"].ToString();
             ddl_project.SelectedValue = row["project_id"].ToString();
+            txt_amount.Value = row["amount"].ToString();
         }
     }
     protected void btnOk_Click(object sender, EventArgs e)

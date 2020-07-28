@@ -67,7 +67,7 @@
                             </asp:TemplateField>                        
                             <asp:TemplateField HeaderText="总金额">
                                 <ItemTemplate>
-                                    <%--<%#Eval("price") %>--%>
+                                    <%#Eval("amount") %>
                                 </ItemTemplate>                            
                             </asp:TemplateField>   
                             <asp:TemplateField HeaderText="负责人">
