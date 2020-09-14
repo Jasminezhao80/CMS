@@ -185,28 +185,36 @@
                         //$("#tableList").setCell(rowid, "product_name", "", "", { editable:true});
                         //alert("ondblClickRow");
                         if (iCol == 6) {
-                            $("#tableList").setColProp("product_name",{editable:true});
+                            $("#tableList").setColProp("product_name", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                         if (iCol == 7) {
-                            $("#tableList").setColProp("product_size",{editable:true});
+                            $("#tableList").setColProp("product_size", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                         if (iCol == 9) {
-                            $("#tableList").setColProp("unit_price",{editable:true});
+                            $("#tableList").setColProp("unit_price", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                         if (iCol == 10) {
-                            $("#tableList").setColProp("quantity",{editable:true});
+                            $("#tableList").setColProp("quantity", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                         if (iCol == 12) {
-                            $("#tableList").setColProp("in_warehouse_date",{editable:true});
+                            $("#tableList").setColProp("in_warehouse_date", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                         if (iCol == 13) {
-                            $("#tableList").setColProp("supplier",{editable:true});
+                            $("#tableList").setColProp("supplier", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                         if (iCol == 14) {
-                            $("#tableList").setColProp("leader",{editable:true});
+                            $("#tableList").setColProp("leader", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                         if (iCol == 15) {
-                            $("#tableList").setColProp("memo",{editable:true});
+                            $("#tableList").setColProp("memo", { editable: true });
+                            $("#tableList").editCell(iRow, iCol, true);
                         }
                     },
                     afterSaveCell: function (rowid, name, val, iRow, iCol) {
