@@ -34,7 +34,8 @@
             var len = 0;
             var flag = true;
             $("#selected_products tr").each(function () {
-                len++;
+                //len++;
+                len = $(this).find("input[name='maxIndex']").val();//len:当前行的行号，因为控件名字的后缀都是行号，即使删除了某一行，其他的行的控件名字也还是原来的。为了保证查找到的是本行的控件数据
                 var name = "txt_deliveryDate" + len;
                 var delivery = $(this).find("input[name='" + name + "']").val();
                 //if (delivery == "") {
@@ -70,6 +71,7 @@
         };
         function delProduct(k) {
             if (confirm('确定将此记录删除?')) {
+                //alert($(k).parent().parent().parent());
                 $(k).parent().parent().parent().remove();
             }
         };
