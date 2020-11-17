@@ -191,6 +191,29 @@
                 }
             });
         }
+        function contractNumChange() {
+            var num = $("#txt_contractNum").val().trim();
+            $("#moneyType").val("");
+            $("#totalSum").val("");
+            if (num != "") {
+                $.ajax({
+                    async: false,
+                    url: "../purchase/PurchaseDetail.aspx/GetContractInfo",
+                    type: "post",
+                    data: "{ num: '" + num + "'}",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        var obj = eval("(" + result.d + ")");
+                        $("#moneyType").val(obj.moneyType);
+                        $("#totalSum").val(obj.amount);
+                    },
+                    error: function (e) {
+                        alert(e);
+                    }
+                });
+            }
+        }
         function AddNewProduct() {
             var num = "";//$("#txt_newNum").val().trim();
             //if (num == "") {
@@ -229,7 +252,7 @@
                 },
             });
         }
-        </script>
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -257,12 +280,7 @@
 
             </div>
             <div class="row form-group">
-                <div class="col-md-2 text-right">
-                    <span class="text-info ">合同编号:</span>
-                </div>
-                <div class="col-md-3">
-                <input id="txt_contractNum" runat ="server" class="form-control" type="text" />
-                </div>
+
                 <div class="col-md-2 text-right">
                         <span style ="color:red">*</span>
                     <span class="text-info">申请日期:</span>
@@ -270,6 +288,12 @@
                 <div class="col-md-3">
                     <input id="txt_applyDate" runat ="server" class="form-control"  type="date" />
                 </div> 
+                <div class="col-md-2 text-right">
+                    <span class="text-info ">销售合同号:</span>
+                </div>
+                <div class="col-md-3">
+                <input id="txt_contractNum" runat ="server" class="form-control" type="text" onkeyup="contractNumChange()" />
+                </div>
            </div>
             <div class="row form-group">
                 <div class="col-md-2 text-right">
@@ -281,11 +305,14 @@
                     <input id="txt_leader" class="form-control " runat ="server" type="text"/>
                 </div>
                 <div class="col-md-2 text-right">
-                    <span class="text-info ">总金额:</span>
-                </div>
-                <div class="col-md-3">
-                   <input id="txt_amount" class="form-control" runat ="server" type="text"  readonly="true"/>
-                </div>
+                        <span class="text-info">销售总金额:</span>
+                    </div>
+                   <div class="col-md-3 form-inline">
+                       <input id="moneyType" type="text" class="form-control" readonly="true" style="width:35%" runat="server"/>
+                       <input id="totalSum" type="text" class="form-control" readonly="true" style="width:63%" runat="server"/>
+                   </div>
+
+                
             </div>
             <div class="row form-group">
 
@@ -294,6 +321,12 @@
                 </div>
                 <div class="col-md-3">
                     <textarea id="txt_memo" class="form-control" runat="server" ></textarea>
+                </div>
+                <div class="col-md-2 text-right">
+                    <span class="text-info ">采购总金额:</span>
+                </div>
+                <div class="col-md-2">
+                   <input id="txt_amount" class="form-control" runat ="server" type="text"  readonly="true"/>
                 </div>
             </div>
         </div>

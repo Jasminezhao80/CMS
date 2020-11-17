@@ -1,6 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="PurchaseList.aspx.cs" Inherits="PurchaseList" %>
 
 <!DOCTYPE html>
+
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -25,11 +27,32 @@
         <UC:Left runat="server" />
         <div class="rightPanel">
             <div class="container-fluid">
-                <div class="row">
-<%--                    <input id="btnAdd" type="button" runat="server" class="btn btn-primary" value ="+添加新订单" data-toggle="modal" data-target="#div_add" /> --%>
-                        <%--<input id="btnImport" type="button" runat="server" class="btn btn-primary" value ="导入订单"  onserverclick="btnImport_ServerClick" />--%> 
-                        <input id="btnAdd" type="button" runat="server" class="btn btn-primary" value ="+添加新订单" onserverclick="btnAdd_ServerClick" /> 
+                <div class="row form-inline form-group">
+                    <div class="col-md-1 text-right">
+                        <span class="text-info">所属项目:</span>
+                        </div>
+                    <div class="col-md-2">
+                        <asp:DropDownList ID="ddl_project" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddl_project_SelectedIndexChanged"></asp:DropDownList>
+                    </div>
+                    <div class="col-md-1 text-right">
+                        <span class="text-info">是否废弃:</span>
+                        </div>
+                    <div class="col-md-1">
+                        <asp:DropDownList ID="ddl_disabled" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddl_disabled_SelectedIndexChanged"></asp:DropDownList>
+                    </div>
 
+                    <div class="col-md-1 text-right">
+                        <span class="text-info">关键字:</span>
+                    </div>
+                    <div class="col-md-3">
+                    <input id="txt_searchKey" type ="text" runat="server" class="form-control" style="width:100%" placeholder="采购单号/合同编号/负责人/备注"/>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="button" name="btSearch" value="查询" id="btSearch" runat="server" class="btn btn-primary" onserverclick="btSearch_ServerClick" />   
+                    </div>
+                    <div class="col-md-1">
+                        <input id="btnAdd" type="button" runat="server" class="btn btn-primary" value ="+添加新订单" onserverclick="btnAdd_ServerClick" /> 
+                    </div>
                 </div>
                 <div id="div_gridPanel" class="row" style="overflow-y:scroll;">
                     <asp:GridView ID="grid_list" runat="server" class="table table-list table-bordered table-hover"

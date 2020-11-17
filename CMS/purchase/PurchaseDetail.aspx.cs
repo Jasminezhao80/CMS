@@ -17,6 +17,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using log4net;
 using System.Configuration;
+using Newtonsoft.Json;
 
 public partial class purchase_PurchaseDetail : System.Web.UI.Page
 {
@@ -61,7 +62,10 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     //}
     private void Load(int id)
     {
-        string sql = @"select * from tb_purchase_order where id="+id;
+        string sql = @"select tb_purchase_order.*,c.name AS moneyType,tb_contract.contract_amount from tb_purchase_order
+                        LEFT JOIN tb_contract ON (tb_purchase_order.contract_id = tb_contract.contract_num AND tb_contract.contract_num != '')
+                        LEFT JOIN tb_code_list c ON (tb_contract.money_type = c.id)
+                        where tb_purchase_order.id=" + id;
         DataTable tb = DBHelper.GetTableBySql(sql);
         if (tb.Rows.Count > 0)
         {
@@ -75,6 +79,8 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             txt_memo.Value = row["memo"].ToString();
             ddl_project.SelectedValue = row["project_id"].ToString();
             txt_amount.Value = row["amount"].ToString();
+            moneyType.Value = row["moneyType"].ToString();
+            totalSum.Value =row["contract_amount"].ToString();
         }
     }
     protected void btnOk_Click(object sender, EventArgs e)
@@ -553,6 +559,27 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     }
     #endregion
 
+    [WebMethod]
+    public static string GetContractInfo(string num)
+    {
+        string sql = @"SELECT b.name moneyType,a.contract_amount 
+                        FROM tb_contract a
+                        LEFT JOIN tb_code_list b ON (a.money_type = b.id)
+                        WHERE a.contract_num='{0}' ";
+        sql = string.Format(sql, num.Replace("'", ""));
+        DataTable tb = DBHelper.GetTableBySql(sql);
+        if (tb.Rows.Count > 0)
+        {
+            var obj = new
+            {
+                moneyType = tb.Rows[0]["moneyType"].ToString(),
+                amount = Convert.ToInt32(tb.Rows[0]["contract_amount"])
+            };
+            string result = JsonConvert.SerializeObject(obj);
+            return result;
+        }
+        return "";
+    }
     [WebMethod]
     public static string AddNewProduct(string num,string name,string category, string size,string material,string unit)
     {

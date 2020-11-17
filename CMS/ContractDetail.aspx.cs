@@ -202,7 +202,7 @@ public partial class _Default : System.Web.UI.Page
                 cmd.Parameters.Add(access.GetParameter("@signatureDate", ConvertToDBValue(signatureDate.Value)));
 
                 cmd.Parameters.Add(access.GetParameter("@fourthDate", ConvertToDBValue(fourthDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@fourthAmount", txt_fourthPay.Value));
+                cmd.Parameters.Add(access.GetParameter("@fourthAmount", fourthAmount.Value));
                 cmd.Parameters.Add(access.GetParameter("@fourthPayDate", ConvertToDBValue(fourthPayDate.Value)));
                 cmd.Parameters.Add(access.GetParameter("@fourthPayAmount", txt_fourthPay.Value));
                 cmd.Parameters.Add(access.GetParameter("@moneyType", ddl_moneyTypy.SelectedItem.Value));

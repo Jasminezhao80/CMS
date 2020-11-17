@@ -19,6 +19,8 @@ public partial class PurchaseList : System.Web.UI.Page
             //按钮权限
             btnAdd.Visible = Function.CheckButtonPermission("A020101");
 
+            Common.DropDownBind(ddl_project, (int)CodeListType.ProjectName, true);
+            Common.DropDownBind(ddl_disabled, (int)CodeListType.IsTrueType, true);
             BindGrid();
         }
     }
@@ -28,7 +30,24 @@ public partial class PurchaseList : System.Web.UI.Page
         string sql = @"SELECT A.*,B.name AS projectName
                     from tb_purchase_order A
                     LEFT JOIN tb_code_list B ON (A.project_id = B.id)
-                    order by A.order_num DESC";
+                    where 1=1 ";
+        if (ddl_project.SelectedItem.Value != "0")
+        {
+            sql += string.Format(" and A.project_id= '{0}'", ddl_project.SelectedItem.Value);
+        }
+        if (ddl_disabled.SelectedItem.Value != "0")
+        {
+            sql += string.Format(" and A.is_disabled = {0}", ddl_disabled.SelectedItem.Value == "20" ? "1" : "0");
+        }
+        if (!string.IsNullOrEmpty(txt_searchKey.Value.Trim()))
+        {
+            string sqlTemp = @" and (A.order_num like '%{0}%' 
+                                or A.contract_id like '%{0}%' 
+                                or A.leader like '%{0}%' 
+                                or A.memo like '%{0}%')";
+            sql += string.Format(sqlTemp, txt_searchKey.Value.Trim().Replace(",", ""));
+        }
+        sql += " order by A.order_num DESC";
         DataTable tb = DBHelper.GetTableBySql(sql);
         grid_list.DataSource = tb;
         grid_list.DataBind();
@@ -122,5 +141,19 @@ public partial class PurchaseList : System.Web.UI.Page
                 e.Row.BackColor = Color.WhiteSmoke;
             }
         }
+    }
+
+    protected void ddl_project_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        BindGrid();
+    }
+
+    protected void ddl_disabled_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        BindGrid();
+    }
+    protected void btSearch_ServerClick(object sender, EventArgs e)
+    {
+        BindGrid();
     }
 }
