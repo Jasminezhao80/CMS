@@ -510,7 +510,14 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
 
         string unitPrice = Request.Form["txt_unitPrice" + index];
         string quantity = Request.Form["txt_quantity" + index];
-        cmd.Parameters.Add(access.GetParameter("@unitPrice", Convert.ToDecimal(unitPrice)));
+        if (string.IsNullOrEmpty(unitPrice))
+        {
+            cmd.Parameters.Add(access.GetParameter("@unitPrice", unitPrice));
+        }
+        else
+        {
+            cmd.Parameters.Add(access.GetParameter("@unitPrice", Convert.ToDecimal(unitPrice)));
+        }
         cmd.Parameters.Add(access.GetParameter("@quantity", quantity));
         string price = string.Empty;
         if (string.IsNullOrEmpty(unitPrice) || string.IsNullOrEmpty(quantity))
