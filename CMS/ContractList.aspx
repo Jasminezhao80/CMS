@@ -115,6 +115,12 @@
                             <%#Eval("contract_name") %>
                         </ItemTemplate>                    
                     </asp:TemplateField>
+                    <asp:TemplateField HeaderText="合同金额">
+                        <ItemTemplate>
+                            <%#Eval("contract_amount") %>
+                        </ItemTemplate>
+                        
+                    </asp:TemplateField>
                     <asp:TemplateField HeaderText="合同对象">
                         <ItemTemplate>
                             <%#Eval("contract_client") %>
