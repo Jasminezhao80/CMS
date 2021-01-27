@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="Left.ascx.cs" Inherits="UserControl_Left" %>
     <div class="leftPanel" id="div_Left" >
-        <ul style="list-style:none;padding:0px;margin:0px; height:500px;width:100%">
+        <ul style="list-style:none;padding:0px;margin:0px; width:100%">
             <li id="A01" runat="server">
                 <a href="javascript:" class="menu-item">
                     <span>合同管理</span>
