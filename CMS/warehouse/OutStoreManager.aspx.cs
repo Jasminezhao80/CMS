@@ -16,7 +16,7 @@ public partial class warehouse_OutStoreManager : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            Common.DropDownBind(this.ddl_outStoreType, (int)CodeListType.OutStoreType, false);
+            Common.FillDropDown(this.ddl_outStoreType, (int)CodeListType.OutStoreType);
             GridDataBind();
         }
     }

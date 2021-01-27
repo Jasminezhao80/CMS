@@ -167,4 +167,19 @@ public class Common
             return result.ToString("F0") + "%";
         }
     }
+    /// <summary>
+    /// 获取固定数据的dropdown
+    /// </summary>
+    /// <param name="dp"></param>
+    /// <param name="type"></param>
+    public static void FillDropDown(DropDownList dropDownList, int type)
+    {
+        string sql = @"select id,name from tb_const where type={0} order by order_num";
+        sql = string.Format(sql, type);
+        DataTable tb = DBHelper.GetTableBySql(sql);
+        dropDownList.DataSource = tb;
+        dropDownList.DataValueField = "id";
+        dropDownList.DataTextField = "name";
+        dropDownList.DataBind();
+    }
 }

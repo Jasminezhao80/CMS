@@ -25,7 +25,7 @@ public partial class warehouse_OutStoreDetailList : System.Web.UI.Page
                     from tb_outstore_detail T1
                     LEFT JOIN tb_product T2 ON(T1.product_id = T2.id)
                     Left join tb_contract T4 on (T4.id = T1.contract_id)
-                    Left join tb_code_list T3 on (T3.id = T1.type) 
+                    Left join tb_const T3 on (T3.id = T1.type) 
                     ";
         gridList.DataSource = DBHelper.GetTableBySql(sql);
         gridList.DataBind();
