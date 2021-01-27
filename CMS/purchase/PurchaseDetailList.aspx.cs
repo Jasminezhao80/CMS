@@ -7,6 +7,7 @@ using System.Web.Services;
 using System.Web.UI.WebControls;
 using CMS.Model;
 using CMS.DB.Imp;
+using System.Web;
 
 public partial class purchase_PurchaseDetailList : System.Web.UI.Page
 {
@@ -207,13 +208,15 @@ public partial class purchase_PurchaseDetailList : System.Web.UI.Page
     public static void SaveWareHouseDate(int id, string date)
     {
         DBAccess ac = DBAccess.CreateInstance();
-        string sql = "update tb_purchase_orderdetail set in_warehouse_date = @date where id=@id";
+        //string sql = "update tb_purchase_orderdetail set in_warehouse_date = @date where id=@id";
         using (DbConnection conn = ac.GetConnection())
         {
             conn.Open();
-            DbCommand cmd = ac.CreateCommand(sql, conn);
-            cmd.Parameters.Add(ac.GetParameter("@id", id));
-            cmd.Parameters.Add(ac.GetParameter("@date", Common.ConvertToDBValue(date)));
+            DbCommand cmd = ac.CreateCommand("sp_updateInstore", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(ac.GetParameter("@detailOrderId", id));
+            cmd.Parameters.Add(ac.GetParameter("@loginUser", ((User)HttpContext.Current.Session["User"]).UserName));
+            cmd.Parameters.Add(ac.GetParameter("@inputDate", Common.ConvertToDBValue(date)));
             ac.ExecuteNonQuery(cmd);
         }
     }

@@ -17,4 +17,5 @@ public enum CodeListType
     ProductCategery = 7,
     SupplierName = 8,
     ProductUnit = 9,
+    OutStoreType=10, //出库类型
 }

@@ -310,6 +310,7 @@
                                     },
                                     error: function (err) {
                                         alert("修改失败！");
+                                        alert(err);
                                     }
                                 });
                                 break;

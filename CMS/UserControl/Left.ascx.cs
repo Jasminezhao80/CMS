@@ -33,6 +33,12 @@ public partial class UserControl_Left : System.Web.UI.UserControl
         CheckPermission(this.A03, "A03");
         CheckPermission(this.A0301, "A0301");
         CheckPermission(this.A0302, "A0302");
+
+        //库存管理
+        CheckPermission(this.A04, "A04");
+        CheckPermission(this.A0401, "A0401");
+        CheckPermission(this.A0402, "A0402");
+        CheckPermission(this.A0403, "A0403");
     }
     private void CheckPermission(System.Web.UI.HtmlControls.HtmlContainerControl obj, string code) {
         if (!Function.ChechMenuPermission(code))

@@ -31,5 +31,9 @@ public enum CodeList
 
     IsTrue_Y = 20,
     IsTrue_N = 21,
+    //出库类型
+    OutStore_Sale = 99,//销售出库
+    OutStore_Produce =100,//生产领用
+    OutStore_Borrow = 101,//借用
 
 }

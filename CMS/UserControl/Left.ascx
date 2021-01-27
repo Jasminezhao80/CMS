@@ -31,6 +31,17 @@
                     <li id="A0204" runat="server"><a href="../product/ProductList.aspx" class="menu-item-detail">商品管理</a></li>
                 </ul>
             </li>
+            <li id="A04" runat="server">
+                <a href="javascript:;" class="menu-item">
+                    <span>库存管理</span>
+                </a>
+                <ul style="list-style:none;padding-left:20px">
+                    <li id="A0401" runat="server"><a href="../warehouse/InStoreDetailList.aspx" class="menu-item-detail">入库明细</a> </li>
+                    <li id="A0402" runat="server"><a href="../warehouse/OutStoreDetailList.aspx" class="menu-item-detail">出库明细</a> </li>
+                    <li id="A0403" runat="server"><a href="../warehouse/OutStoreManager.aspx" class ="menu-item-detail">库存管理</a> </li>
+
+                </ul>
+            </li>
             <li id="A03" runat="server">
                 <a href="javascript:" class="menu-item">
                     <span>基础信息管理</span>
