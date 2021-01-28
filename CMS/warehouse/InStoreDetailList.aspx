@@ -15,7 +15,7 @@
         <UC:Top runat="server"/>
         <UC:Left runat="server" />
         <div class="rightPanel">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <asp:gridview runat="server" ID="gridList" EmptyDataText="没有数据" AutoGenerateColumns="false" class="table table-list table-hover" >
                         <Columns>
@@ -54,6 +54,11 @@
                             <%# Eval("instore_date") is null || Eval("instore_date") is DBNull ? string.Empty : Convert.ToDateTime(Eval("instore_date")).ToString("yyyy-MM-dd") %>
                         </ItemTemplate>
                     </asp:TemplateField> 
+                            <asp:TemplateField HeaderText="操作">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="btnDel" runat="server" OnClick="btnDel_Click" CommandArgument='<%#Eval("id")+";" +Eval("quantity")+";"+Eval("product_id") %>' OnClientClick="javascript:return confirm('确定要删除么?')" Text="删除"/>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:gridview>
 

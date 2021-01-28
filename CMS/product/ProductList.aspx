@@ -45,7 +45,6 @@
                     alert(e);
                 }
             });
-
         }
         function SaveClick() {
             if ($("#txt_num").val() == "") {

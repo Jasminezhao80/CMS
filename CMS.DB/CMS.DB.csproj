@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="DBAccess.cs" />
     <Compile Include="DBHelper.cs" />
+    <Compile Include="Imp\InstoreDetailImp.cs" />
     <Compile Include="Imp\ProductImp.cs" />
     <Compile Include="Imp\PurchaseDetailImp.cs" />
     <Compile Include="LogerHelper.cs" />

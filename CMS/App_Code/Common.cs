@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 /// <summary>
@@ -181,5 +182,10 @@ public class Common
         dropDownList.DataValueField = "id";
         dropDownList.DataTextField = "name";
         dropDownList.DataBind();
+    }
+    public static void Alert(string info, Page p)
+    {
+        string script = "<script>alert('" + info + "')</script>";
+        p.ClientScript.RegisterStartupScript(p.GetType(), "", script);
     }
 }
