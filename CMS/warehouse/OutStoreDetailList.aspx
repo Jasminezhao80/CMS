@@ -107,7 +107,7 @@
         <UC:Top runat="server"/>
         <UC:Left runat="server" />
         <div class="rightPanel">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <asp:gridview runat="server" ID="gridList" EmptyDataText="没有数据" AutoGenerateColumns="false" class="table table-list table-hover" >
                         <Columns>
@@ -157,10 +157,12 @@
                                     <%#Convert.ToDateTime(Eval("outstore_date")).ToString("yyyy-MM-dd") %>
                                     <%-- <input type="date" runat="server" style="width:100%;border:none"  value='<%# Eval("in_warehouse_date") is null || Eval("in_warehouse_date") is DBNull || Eval("in_warehouse_date").ToString() ==""? string.Empty : Convert.ToDateTime(Eval("in_warehouse_date")).ToString("yyyy-MM-dd") %>' onchange='<%#Eval("id","SaveWareHouseDate({0},this)") %>' />--%>
                                 </ItemTemplate>
-<%--                                <EditItemTemplate>
-                                    <input type="text" runat="server" style="width:80px" value='<%#Eval("unit_price") %>' />
-                                </EditItemTemplate>--%>
-                            </asp:TemplateField>                            
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="操作">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="btn" runat="server" OnClientClick="javascript:return confirm('确定要删除此出库单么？')"  OnClick="btn_Click" CommandArgument='<%#Eval("id") %>'>删除</asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                             </Columns>
                     </asp:gridview>
 

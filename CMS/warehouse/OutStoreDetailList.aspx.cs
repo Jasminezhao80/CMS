@@ -8,7 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using CMS.DB;
 using Newtonsoft.Json;
-
+using CMS.Bll;
 public partial class warehouse_OutStoreDetailList : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
@@ -29,5 +29,14 @@ public partial class warehouse_OutStoreDetailList : System.Web.UI.Page
                     ";
         gridList.DataSource = DBHelper.GetTableBySql(sql);
         gridList.DataBind();
+    }
+
+    protected void btn_Click(object sender, EventArgs e)
+    {
+        int id = Convert.ToInt32(((LinkButton)sender).CommandArgument);
+        OutStoreBll bll = new OutStoreBll();
+        bll.Delete(id);
+        GridDataBind();
+
     }
 }
