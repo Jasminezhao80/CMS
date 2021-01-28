@@ -4,9 +4,12 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using CMS.DB;
+using CMS.Bll;
+using Newtonsoft.Json;
 
 public partial class product_ProductList : System.Web.UI.Page
 {
@@ -107,5 +110,11 @@ public partial class product_ProductList : System.Web.UI.Page
     {
         grid_product.PageIndex = e.NewPageIndex;
         BindGrid();
+    }
+    [WebMethod]
+    public static string GetProduct(int id)
+    {
+        ProductBll bll = new ProductBll();
+        return JsonConvert.SerializeObject(bll.GetProductById(id));
     }
 }

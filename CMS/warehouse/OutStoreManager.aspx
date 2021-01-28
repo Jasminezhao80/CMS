@@ -180,9 +180,9 @@
         <div class="rightPanel">
             <div class="container">
                 <div class="row">
-                    <asp:gridview runat="server" ID="gridList" AutoGenerateColumns="false" class="table table-list table-hover" >
+                    <asp:gridview runat="server" ID="gridList" EmptyDataText="没有数据" AutoGenerateColumns="false" class="table table-list table-hover"  >
                         <Columns>
-                            <asp:TemplateField HeaderText="序号" >
+                            <asp:TemplateField HeaderText="序号"  >
                                 <ItemTemplate>
                                     <%#Container.DataItemIndex + 1 %>
                                 </ItemTemplate>
