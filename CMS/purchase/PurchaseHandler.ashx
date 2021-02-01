@@ -29,7 +29,7 @@ public class PurchaseHandler : IHttpHandler {
             return;
         }
         //string type = context.Request["cellType"];
-        string sql = @"SELECT A.product_id,A.order_id,A.price,A.quantity,A.in_warehouse_date,A.id,B.order_num,D.name AS projectName,E.name AS category,B.contract_id,B.apply_date,A.delivery_date,
+        string sql = @"SELECT H.quantity as instore_quantity,A.product_id,A.order_id,A.price,A.quantity,A.in_warehouse_date,A.id,B.order_num,D.name AS projectName,E.name AS category,B.contract_id,B.apply_date,A.delivery_date,
         C.product_name,C.product_size,C.product_material,F.name AS unit,A.unit_price,G.name AS supplier,A.leader,A.memo,A.supplier_id 
         FROM tb_purchase_orderdetail A
         LEFT JOIN tb_purchase_order B ON (A.order_id = B.id)
@@ -37,7 +37,9 @@ public class PurchaseHandler : IHttpHandler {
         LEFT JOIN tb_code_list D ON (B.project_id = D.id)
         LEFT JOIN tb_code_list E ON (C.product_category_id = E.id)
         LEFT JOIN tb_code_list F ON(F.id = C.product_unit_id)
-        LEFT JOIN tb_code_list G ON (G.id = A.supplier_id) where B.is_disabled <> 1 ";
+        LEFT JOIN tb_code_list G ON (G.id = A.supplier_id) 
+        Left join tb_instore_detail H on (A.id = H.purchase_order_detail_id)        
+        where B.is_disabled <> 1 ";
         if (context.Request["pId"] != "0")
         {
             sql += " and B.project_id ='" + context.Request["pId"] + "'";

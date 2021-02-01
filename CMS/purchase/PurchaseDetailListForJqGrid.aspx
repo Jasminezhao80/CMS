@@ -15,6 +15,7 @@
     <script src="../js/jquery-ui.min.js"></script>
     <script src="../js/jqGrid/jquery.jqGrid.min.js"></script>
     <script src="../js/jqGrid/grid.locale-cn.js"></script>
+        <script src ="../js/bootstrap.min.js"></script>
     <script type="text/javascript">
         function SearchClick() {
             var ddl_project = $("#ddl_project").val();
@@ -70,7 +71,7 @@
                     postData: {pId:ddl_project,pSupplier:ddl_supplier,pWarehouse:ddl_isInWarehouse,pSearch:txt_searchKey},
                     mtype: "post",
                     datatype: "json",
-                     colNames: ['所属项目', '类别', '申购单号','合同编号','申请日期','采购内容','规格','单位','单价','数量','总价','入库日期','供应商','负责人','备注','商品ID','order_id'],
+                     colNames: ['所属项目', '类别', '申购单号','合同编号','申请日期','采购内容','规格','单位','单价','数量','总价','入库日期','供应商','负责人','备注','商品ID','order_id','已入库数量','入库操作'],
                     colModel: [{ name: 'projectName', index: 'projectName' },
                     { name: 'category', index: 'category', classes: 'GridCell' },
                     { name: 'order_num', index: 'order_num', width:350,formatter: editLink, formatoptions: { baseLinkUrl: "../purchase/PurchaseDetail.aspx", addParam: '&&orderId=10&&backType=jqGridDetailList' } },
@@ -84,7 +85,7 @@
                     { name: 'quantity', index: 'quantity', editable: false, edittype: 'text', editrules: { required: true, integer: true } },
                     { name: 'price', index: 'price' },
                     {
-                        name: 'in_warehouse_date', index: 'date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, editable: false, edittype: 'text',
+                        name: 'in_warehouse_date', index: 'in_warehouse_date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, editable: false, edittype: 'text',
                         editoptions: {
                             size: 10,
                             dataInit: function (element) {
@@ -114,7 +115,16 @@
                         { name: 'leader', index: 'leader', editable: false, edittype: 'text' },
                         { name: 'memo', index: 'memo',editable: false,edittype:'text' },
                         { name: 'product_id', index: 'product_id', hidedlg: true, hidden: true },
-                        { name: 'order_id', index: 'order_id', hidden: true }
+                        { name: 'order_id', index: 'order_id', hidden: true },
+                        
+                        { name: 'instore_quantity', index: 'instore_quantity', editable: false },
+                        {
+                            name: '', index: 'operate', width: 300, formatter: function (cellvalue, options, rowObject) {
+                                var temp = "<div><input type='button' id='btnIn' value='入库' onclick='InstoreClick(" + rowObject.id + "," + rowObject.quantity + ")' data-toggle='modal' data-target='#pop_inStore'/>";
+                                temp += "<input type='button' value='取消入库' onclick='return CancelClick(" + rowObject.id + "," + rowObject.product_id + "," + rowObject.instore_quantity + ");' style='margin-left:5px' /></div>";
+                                return temp;
+                            }
+                        }
 
                     ],
                     cellurl:"../purchase/PurchaseHandler.ashx",
@@ -137,6 +147,7 @@
                     //    alert("onCellSelect");
                     //    $("#tableList").setColProp("product_size",{editable:false});
                     //},
+                    
                     beforeEditCell:function (rowid, cellname, v, iRow, iCol) {
                                                    $("#tableList").setColProp("product_name",{editable:false});
                             $("#tableList").setColProp("product_size",{editable:false});
@@ -357,6 +368,58 @@
         $(document).ready(function () {
             load();
         });
+        function CancelClick(id, productId, cancelQuantity) {
+            var result = confirm("确定取消入库么？");
+            alert(id + ":" + productId + ":" + cancelQuantity);
+            if (result) {
+                $.ajax({
+                    async: false,
+                    url: "../purchase/PurchaseDetailListForJqGrid.aspx/CancelInstore",
+                    type: "post",
+                    data: "{'purchaseDetailId':" + id + ",'productId':" + productId + ",'cancelQuantity':" + cancelQuantity+"}",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                       // $("#tableList").jqGrid('setCell', rowid, "in_warehouse_date", "");
+                        if (res.d == "true") {
+                            alert("取消入库成功！");
+                        }
+                        else {
+                            alert("此订单已出库，库存数量不足，不能取消入库！");
+                        }
+                        
+                    },
+                    error: function (err) {
+                        alert("操作失败！");
+                    }
+                })
+            };
+            return result;
+        };
+        function InstoreClick(id, quantity) {
+            $("#txt_inStore").val("");
+            $("#txt_outStoreTime").val("");
+            $("#txt_quantity").val(quantity);
+            $("#txt_id").val(id);
+        };
+        function submitClick() {
+            if ($("#txt_outStoreTime").val() == "") {
+                alert("请输入入库日期！");
+                $("#txt_outStoreTime").focus();
+                return false;
+            };
+            if ($("#txt_inStore").val() == "") {
+                alert("请输入入库数量！");
+                $("#txt_inStore").focus();
+                return false;
+            };
+            if (parseInt($("#txt_inStore").val()) > parseInt($("#txt_quantity").val())) {
+                alert("入库数量不能大于采购数量！");
+                $("#txt_inStore").focus();
+                return false;
+            };
+            return true;
+        }
     </script>
      <style type="text/css">
         thead tr {
@@ -426,6 +489,51 @@
                 <table id="tableList" style="font-weight:normal;width:100%"  ></table>
                 <div id="pager1"></div>
                 </div>
+
+                <div class="modal fade" id="pop_inStore" onload="">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="text-info">商品入库</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>                     
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <input type="text" id="txt_id" runat="server" hidden="hidden" />
+
+                                <div class="row form-group">
+                                    <div class="col-md-2 text-right">
+                                        <span class="text-info">入库日期:</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input class="form-control" type="date" id="txt_outStoreTime" runat="server" />
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <span class="text-info">采购数量:</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" type="text" id="txt_quantity" readonly="true" runat="server" />
+                                    </div>
+                                </div>
+                                    <div class="row form-group">
+                                    <div class="col-md-2 text-right">
+                                        <span class="text-info">入库数量:</span>
+                                       </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" type="text" id="txt_inStore"  runat="server" />
+                                    </div>
+                                </div>
+                                 <div class="row form-group">
+                                    <div class="col-md-6 text-right">
+                                        <input type="submit" id="btn_submit" class="btn btn-primary" value="提交" runat="server" onclick="return submitClick();" onserverclick="btn_submit_ServerClick" />
+                                    </div>
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
 

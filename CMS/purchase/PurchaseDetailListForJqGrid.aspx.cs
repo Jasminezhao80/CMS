@@ -7,7 +7,9 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using CMS.Bll;
 using CMS.DB;
+using CMS.Model;
 using Newtonsoft.Json;
 
 public partial class purchase_PurchaseDetailListForJqGrid : System.Web.UI.Page
@@ -73,8 +75,28 @@ public partial class purchase_PurchaseDetailListForJqGrid : System.Web.UI.Page
     }
 
 
-    protected void btn_Search_ServerClick(object sender, EventArgs e)
+    protected void btn_submit_ServerClick(object sender, EventArgs e)
     {
+        InstoreBll bll = new InstoreBll();
+        bll.SaveInWareHouse(Convert.ToInt32(txt_id.Value), Common.ConvertToDBValue(txt_outStoreTime.Value),Convert.ToInt32(txt_inStore.Value), ((User)HttpContext.Current.Session["User"]).UserName);
 
+    }
+    [WebMethod]
+    public static string CancelInstore(int purchaseDetailId,int productId,int? cancelQuantity)
+    {
+        if (cancelQuantity == null) cancelQuantity = 0;
+        InstoreBll bll = new InstoreBll();
+        //判断此商品的库存量是否大于取消入库的数量，如果库存量大于取消入库的数量，则此商品未出库，可以取消入库。反之，则不能取消入库。
+        int leftQuantity = bll.GetProductLeftQuantity(productId);
+       
+        if (leftQuantity >= cancelQuantity)
+        {
+            bll.DeleteByPurchaseDetailId(purchaseDetailId);
+            return "true";
+        }
+        else
+        {
+            return "false";
+        }
     }
 }

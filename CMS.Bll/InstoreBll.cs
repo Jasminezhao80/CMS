@@ -13,13 +13,21 @@ namespace CMS.Bll
         public InstoreBll() {
             imp = new InstoreDetailImp();
         }
-        public void Delete(int id)
+        public void DeleteByPurchaseDetailId(int purchaseDetailId)
         {
-            imp.Delete(id);
+            imp.DeleteByPurchaseDetailId(purchaseDetailId);
+        }
+        public void DeleteById(int id)
+        {
+            imp.DeleteById(id);
         }
         public int GetProductLeftQuantity(int productId)
         {
             return imp.GetProductLeftQuantity(productId);
+        }
+        public void SaveInWareHouse(int id, object date, int? inQuantity, string userName)
+        {
+            imp.SaveInWareHouse(id, date, inQuantity, userName);
         }
     }
 }

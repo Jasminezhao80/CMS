@@ -28,7 +28,7 @@ public partial class warehouse_InStoreDetailList : System.Web.UI.Page
     protected void btnDel_Click(object sender, EventArgs e)
     {
         object[] arguments = ((LinkButton)sender).CommandArgument.Split(';');
-        int id = Convert.ToInt32(arguments[0]);
+        int id = Convert.ToInt32(arguments[0]);//inStore_id
         int productId = Convert.ToInt32(arguments[2]);
         int quantity = Convert.ToInt32(arguments[1]);
         InstoreBll bll = new InstoreBll();
@@ -36,7 +36,7 @@ public partial class warehouse_InStoreDetailList : System.Web.UI.Page
         int leftQuantity = bll.GetProductLeftQuantity(productId);
         if (leftQuantity >= quantity)
         {
-            bll.Delete(id);
+            bll.DeleteById(id);
             GridDataBind();
         }
         else
