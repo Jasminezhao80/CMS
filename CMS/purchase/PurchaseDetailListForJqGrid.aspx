@@ -366,6 +366,8 @@
             $("#tableList").jqGrid('setLabel', 0, '序号', 'labelstyle');
         };
         $(document).ready(function () {
+            $("#modalDialog").draggable();
+            $("#pop_inStore").css("overflow", "hidden");
             load();
         });
         function CancelClick(id, productId, cancelQuantity) {
@@ -490,8 +492,8 @@
                 <div id="pager1"></div>
                 </div>
 
-                <div class="modal fade" id="pop_inStore" onload="">
-                <div class="modal-dialog">
+                <div class="modal fade" id="pop_inStore" >
+                <div class="modal-dialog" id="modalDialog" >
                     <div class="modal-content">
                         <div class="modal-header">
                             <span class="text-info">商品入库</span>
