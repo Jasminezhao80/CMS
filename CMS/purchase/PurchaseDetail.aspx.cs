@@ -215,10 +215,10 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
         string sql = @"select A.id,product_num,product_material,product_name,product_size,product_category_id,product_unit_id,B.name as category,C.name as unit 
                         from tb_product A  
                         left join tb_code_list B on (A.product_category_id = B.id) 
-                        left join tb_code_list C on (A.product_unit_id = C.id) ";
+                        left join tb_code_list C on (A.product_unit_id = C.id) where A.del_flag=0 ";
         if (!string.IsNullOrEmpty(searchKey))
         {
-            sql = sql + " where product_num like '%{0}%' or product_name like '%{0}%' or product_size like '%{0}%' or product_material like '%{0}%'";
+            sql = sql + " and (product_num like '%{0}%' or product_name like '%{0}%' or product_size like '%{0}%' or product_material like '%{0}%')";
             sql = string.Format(sql, searchKey);
         }
         if (grid_product.Attributes["SortExpression"] != null)

@@ -347,18 +347,23 @@ public partial class SummaryReport : System.Web.UI.Page
             #region Report3 预警合同
             // 第一行数据的开始行
             rowIndex = rowIndex + GridView2.Rows.Count + 7 + GridView3.Rows.Count + 8;
-            GenerateWarningReport(rowIndex, sheet, GridView4);
+            GenerateWarningReport(rowIndex, sheet, GridView4);//预警收款合同
+            //预警付款合同
+            rowIndex = rowIndex + GridView4.Rows.Count + 7;
             if (GridView5.Rows.Count > 0)
             {
-                rowIndex = rowIndex + GridView4.Rows.Count + 7;
-                GenerateWarningReport(rowIndex, sheet, GridView5);
+                GenerateWarningReport(rowIndex, sheet, GridView5);//预警付款合同
             }
             #endregion
+            #region 签订的新合同
+
             if (GridView6.Rows.Count > 0)
             {
-                rowIndex = rowIndex + GridView5.Rows.Count + 5;
+                rowIndex = rowIndex + GridView5.Rows.Count + 6;
                 GenerateNewSignReport(rowIndex, sheet, GridView6);
             }
+            #endregion
+
             string newFile = "c:\\Report\\ContractReport.xls";
             using (FileStream stream2 = File.Open(newFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {

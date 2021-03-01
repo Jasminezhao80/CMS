@@ -44,6 +44,10 @@ website.publishproj
     </AssemblyAttributes>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CMS.Bll\CMS.Bll.csproj">
+      <Project>{6FB39AED-7A24-46AD-A484-6148142ACCE5}</Project>
+      <Name>CMS.Bll</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CMS.DB\CMS.DB.csproj">
       <Project>{FAA8534D-5ED9-4EAD-B752-287D31BF86B7}</Project>
       <Name>CMS.DB</Name>

@@ -119,16 +119,21 @@
                         
                         { name: 'instore_quantity', index: 'instore_quantity', editable: false },
                         {
-                            name: '', index: 'operate', width: 300, formatter: function (cellvalue, options, rowObject) {
-                                var temp = "<div><input type='button' id='btnIn' value='入库' onclick='InstoreClick(" + rowObject.id + "," + rowObject.quantity + ")' data-toggle='modal' data-target='#pop_inStore'/>";
-                                temp += "<input type='button' value='取消入库' onclick='return CancelClick(" + rowObject.id + "," + rowObject.product_id + "," + rowObject.instore_quantity + ");' style='margin-left:5px' /></div>";
+                            name: '', index: 'operate', width: 220, formatter: function (cellvalue, options, rowObject) {
+                                var temp ="<div>"
+                                if (rowObject.instore_quantity != null) {
+                                    temp += "<input style='width:80px' type='button' value='取消入库' onclick='return CancelClick(" + rowObject.id + "," + rowObject.product_id + "," + rowObject.instore_quantity + ");' style='margin-left:5px' />";
+                                }
+                                else {
+                                    temp += "<input  type='button' style='width:80px' id='btnIn' value='入库' onclick='InstoreClick(" + rowObject.id + "," + rowObject.quantity + ")' data-toggle='modal' data-target='#pop_inStore'/>";
+                                }
+                                temp += "</div>"
                                 return temp;
                             }
                         }
-
                     ],
                     cellurl:"../purchase/PurchaseHandler.ashx",
-                    rowNum: 1000,
+                    rowNum: 100,
                     rowList: [100, 200, 300,500,1000],
                     pager: "#pager1",
                     sortname: "order_num",
@@ -138,17 +143,26 @@
                     autowidth: true,
                     rownumbers: true,
                     height: hight,
-                    rownumWidth:40,
+                    rownumWidth:60,
                     cellEdit: true,
                     shrinkToFit: true,
+                    
                     //onCellSelect: function (rowid,iCol,cellcontent,e) {
                     //    //alert("afterEditCell" + cellname + "值："+value);
                     //    //$("#tableList").trigger("reloadGrid");
                     //    alert("onCellSelect");
                     //    $("#tableList").setColProp("product_size",{editable:false});
                     //},
-                    
-                    beforeEditCell:function (rowid, cellname, v, iRow, iCol) {
+
+                    /**
+                     * /
+                     * @param rowid
+                     * @param cellname
+                     * @param v
+                     * @param iRow
+                     * @param iCol
+                     */
+                   beforeEditCell:function (rowid, cellname, v, iRow, iCol) {
                                                    $("#tableList").setColProp("product_name",{editable:false});
                             $("#tableList").setColProp("product_size",{editable:false});
 
@@ -164,6 +178,7 @@
 
                             $("#tableList").setColProp("memo",{editable:false});
                     },
+                    
                     afterEditCell:function (rowid, cellname, v, iRow, iCol) {
 
                             $("#tableList").setColProp("product_name",{editable:false});
@@ -181,20 +196,14 @@
 
                             $("#tableList").setColProp("memo",{editable:false});
 
-                        //}
-                        //if (cellname == "product_name") {
-                        //    $("#tableList").setColProp("product_size",{editable:false});
-                        //}
-                        //$("#tableList").trigger("reloadGrid");
                     },
+
                     ondblClickRow: function (rowid, iRow, iCol, e) {
-                        //alert("ondblClickRow");
                         var flag = "<%=editFlag%>";
+                        
                         if (flag == "False") {
                             return;
                         }
-                        //$("#tableList").setCell(rowid, "product_name", "", "", { editable:true});
-                        //alert("ondblClickRow");
                         if (iCol == 6) {
                             $("#tableList").setColProp("product_name", { editable: true });
                             $("#tableList").editCell(iRow, iCol, true);
@@ -230,7 +239,7 @@
                     },
                     afterSaveCell: function (rowid, name, val, iRow, iCol) {
                         var flag = "<%=editFlag%>";
-                        //alert(flag);
+                        
                         if (flag == "False") {
                             alert("此账号没有修改权限！");
                             return;
@@ -275,7 +284,6 @@
                                 break;
                             case "product_name":
                                 var productId = $("#tableList").getCell(rowid, 'product_id');
-                                //alert("productId:" + product_id);
                                 $.ajax({
                                     async: false,
                                     url: "../purchase/PurchaseDetailList.aspx/UpdateProduct",
@@ -372,7 +380,6 @@
         });
         function CancelClick(id, productId, cancelQuantity) {
             var result = confirm("确定取消入库么？");
-            alert(id + ":" + productId + ":" + cancelQuantity);
             if (result) {
                 $.ajax({
                     async: false,
@@ -385,6 +392,7 @@
                        // $("#tableList").jqGrid('setCell', rowid, "in_warehouse_date", "");
                         if (res.d == "true") {
                             alert("取消入库成功！");
+                            SearchClick();
                         }
                         else {
                             alert("此订单已出库，库存数量不足，不能取消入库！");
@@ -484,7 +492,7 @@
                         <input type="text" placeholder="采购单号/合同编号/采购内容/规格/类别" id="txt_searchKey" runat="server" class="form-control" style="width:78%" />
                     </div>
                     <div class="col-md-1">
-                        <input type="button" id="btn_Search" runat="server" class="btn btn-primary" value="查询" onclick="SearchClick()"/>
+                        <input type="button"  id="btn_Search" runat="server" class="btn btn-primary" value="查询" onclick="SearchClick()"/>
                     </div>
                 </div>
                 <div class="row">

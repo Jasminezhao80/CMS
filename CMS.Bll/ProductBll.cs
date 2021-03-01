@@ -10,10 +10,19 @@ namespace CMS.Bll
 {
     public class ProductBll
     {
+        ProductImp imp = new ProductImp();
         public Product GetProductById(int id)
         {
-            ProductImp imp = new ProductImp();
             return imp.GetProductById(id);
         }
+        public Product GetProduct(string name,string size,string material,string categoryId,string unitId)
+        {
+            return imp.GetProduct(name,size,material,categoryId,unitId);
+        }
+        public void Delete(int productId)
+        {
+            imp.DeleteProduct(productId);
+        }
+
     }
 }

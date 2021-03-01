@@ -42,19 +42,20 @@ public partial class purchase_PurchaseDetailListForJqGrid : System.Web.UI.Page
     [WebMethod]
     public static string GetSupplier()
     {
-        string sqlStr = @"select id,name from tb_code_list where type={0} order by name";
-        sqlStr = string.Format(sqlStr, (int)CodeListType.SupplierName);
-        DataTable supplierTb = DBHelper.GetTableBySql(sqlStr);
-        List<string> list = new List<string>();
+        
+         string sqlStr = @"select id,name from tb_code_list where type={0} order by name";
+         sqlStr = string.Format(sqlStr, (int)CodeListType.SupplierName);
+         DataTable supplierTb = DBHelper.GetTableBySql(sqlStr);
+         List<string> list = new List<string>();
 
-        if (supplierTb.Rows.Count > 0)
-        {
-            foreach (DataRow row in supplierTb.Rows)
-            {
-                list.Add(row["id"] + ":" + row["name"]);
-            }
-        }
-        return string.Join(";",list.ToArray());
+         if (supplierTb.Rows.Count > 0)
+         {
+             foreach (DataRow row in supplierTb.Rows)
+             {
+                 list.Add(row["id"] + ":" + row["name"]);
+             }
+         }
+         return string.Join(";",list.ToArray());
 
     }
     [WebMethod]

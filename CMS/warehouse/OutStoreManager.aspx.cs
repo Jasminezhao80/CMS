@@ -22,14 +22,20 @@ public partial class warehouse_OutStoreManager : System.Web.UI.Page
     }
     private void GridDataBind()
     {
-        string sql = @"SELECT T1.*,(case when T2.outTotal IS NULL then 0 ELSE T2.outTotal END) AS outTotal,T3.product_name,T3.product_size,T3.product_material  from
+        string sql = @"SELECT T1.*,(case when T2.outTotal IS NULL then 0 ELSE T2.outTotal END) AS outTotal,T3.product_name,T3.product_size,T3.product_material  
+                    from
                     (SELECT product_id,SUM(quantity) AS inTotal FROM tb_instore_detail
                     GROUP BY product_id) T1
                     LEFT JOIN 
                     (SELECT product_id,SUM(quantity) AS outTotal FROM tb_outstore_detail
                     GROUP BY product_id) T2 ON (T1.product_id = T2.product_id)
-                    LEFT JOIN tb_product T3 ON(T1.product_id = T3.id)
+                    inner JOIN tb_product T3 ON(T1.product_id = T3.id)
                     ";
+        if (txt_search.Value.Trim() != "")
+        {
+            sql += " where T3.product_name like '%{0}%' or T3.product_size like '%{0}%' or T3.product_material like '%{0}%' ";
+            sql = string.Format(sql, txt_search.Value.Trim());
+        }
         gridList.DataSource = DBHelper.GetTableBySql(sql);
         gridList.DataBind();
     }
@@ -128,5 +134,10 @@ public partial class warehouse_OutStoreManager : System.Web.UI.Page
     protected void btnOut_Click(object sender, EventArgs e)
     {
         this.txt_store.Value = gridList.SelectedRow.Cells[6].Text;//现有库存;
+    }
+
+    protected void btn_search_ServerClick(object sender, EventArgs e)
+    {
+        GridDataBind();
     }
 }

@@ -27,10 +27,10 @@ public partial class product_ProductList : System.Web.UI.Page
         string sql = @"select A.id,product_num,product_name,product_material,product_size,product_category_id,product_unit_id,B.name as category,C.name as unit 
                         from tb_product A  
                         left join tb_code_list B on (A.product_category_id = B.id) 
-                        left join tb_code_list C on (A.product_unit_id = C.id) ";
+                        left join tb_code_list C on (A.product_unit_id = C.id) where del_flag=0 ";
         if (!string.IsNullOrEmpty(txt_search.Value.Trim()))
         {
-            sql += " where A.product_name like '%{0}%' or A.product_material like '%{0}%' or A.product_size like '%{0}%' or B.name like '%{0}%'";
+            sql += " and (A.product_name like '%{0}%' or A.product_material like '%{0}%' or A.product_size like '%{0}%' or B.name like '%{0}%')";
         }
         DataTable tb = DBHelper.GetTableBySql(string.Format(sql,txt_search.Value));
         grid_product.DataSource = tb;
@@ -40,6 +40,20 @@ public partial class product_ProductList : System.Web.UI.Page
     protected void btnSave_Click(object sender, EventArgs e)
     {
         int id = Convert.ToInt32(txt_id.Value);
+        string name = txt_name.Value.Trim();
+        string size = txt_size.Value.Trim();
+        string material = txt_material.Value.Trim();
+        string categoryId = ddl_type.SelectedItem.Value;
+        string unitId = ddl_unit.SelectedItem.Value;
+
+        //检查商品信息是否已经在数据库中存在
+        ProductBll bll = new ProductBll();
+        if (bll.GetProduct(name, size, material, categoryId, unitId) != null)
+        {
+            Common.Alert("此商品已经存在，不能重复添加！", this);
+            return;
+        }
+
         string sql = string.Empty;
         if (id > 0)
         {
@@ -49,7 +63,8 @@ public partial class product_ProductList : System.Web.UI.Page
         else
         {
             sql = @"insert into tb_product(product_num,product_name,product_size,product_category_id,product_unit_id,product_material)
-                values(@num,@name,@size,@category,@unit,@material)";
+            values(@num,@name,@size,@category,@unit,@material)";
+ 
         }
         DBAccess access = DBAccess.CreateInstance();
         using (DbConnection conn = access.GetConnection())
@@ -57,11 +72,11 @@ public partial class product_ProductList : System.Web.UI.Page
             conn.Open();
             DbCommand cmd = access.CreateCommand(sql, conn);
             cmd.Parameters.Add(access.GetParameter("@num", ""));
-            cmd.Parameters.Add(access.GetParameter("@name",txt_name.Value.Trim()));
-            cmd.Parameters.Add(access.GetParameter("@size",txt_size.Value.Trim()));
-            cmd.Parameters.Add(access.GetParameter("@unit", ddl_unit.SelectedItem.Value));
-            cmd.Parameters.Add(access.GetParameter("@category", ddl_type.SelectedItem.Value));
-            cmd.Parameters.Add(access.GetParameter("@material", txt_material.Value.Trim()));
+            cmd.Parameters.Add(access.GetParameter("@name",name));
+            cmd.Parameters.Add(access.GetParameter("@size",size));
+            cmd.Parameters.Add(access.GetParameter("@unit", unitId));
+            cmd.Parameters.Add(access.GetParameter("@category", categoryId));
+            cmd.Parameters.Add(access.GetParameter("@material", material));
             access.ExecuteNonQuery(cmd);
         }
         BindGrid();
@@ -69,15 +84,8 @@ public partial class product_ProductList : System.Web.UI.Page
 
     protected void btnDel_Click(object sender, EventArgs e)
     {
-        string delSql = "delete from tb_product where id = @id";
-        DBAccess access = DBAccess.CreateInstance();
-        using (DbConnection conn = access.GetConnection())
-        {
-            conn.Open();
-            DbCommand cmd = access.CreateCommand(delSql, conn);
-            cmd.Parameters.Add(access.GetParameter("@id", (sender as LinkButton).CommandArgument));
-            access.ExecuteNonQuery(cmd);
-        }
+        ProductBll bll = new ProductBll();
+        bll.Delete(Convert.ToInt32((sender as LinkButton).CommandArgument));
         BindGrid();
     }
 

@@ -178,7 +178,15 @@
         <UC:Top runat="server"/>
         <UC:Left runat="server" />
         <div class="rightPanel">
-            <div class="container">
+            <div class="container-fluid">
+                    <div class="row">
+                    <div class="col-md-5">
+                        <input id="txt_search" class="form-control" runat="server" placeholder="商品名称/规格/材质"/>
+                    </div>
+                    <div class="col-md-1">
+                        <input id="btn_search" type="button" class="btn btn-primary" value="查询" runat="server" onserverclick="btn_search_ServerClick"/>
+                    </div>
+                </div>
                 <div class="row">
                     <asp:gridview runat="server" ID="gridList" EmptyDataText="没有数据" AutoGenerateColumns="false" class="table table-list table-hover"  >
                         <Columns>
