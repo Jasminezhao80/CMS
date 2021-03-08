@@ -171,7 +171,7 @@ public partial class _Default : System.Web.UI.Page
                 cmd.Parameters.Add(access.GetParameter("@name", contractName.Value));
                 cmd.Parameters.Add(access.GetParameter("@num", contractNum.Value));
                 cmd.Parameters.Add(access.GetParameter("@project", ddl_project.SelectedItem.Value));
-                cmd.Parameters.Add(access.GetParameter("@amount", totalSum.Value));
+                cmd.Parameters.Add(access.GetParameter("@amount", ConvertToDBValue(totalSum.Value)));
 
                 cmd.Parameters.Add(access.GetParameter("@appointment", (int)CodeList.IsTrue_Y));
                 cmd.Parameters.Add(access.GetParameter("@complete", (int)CodeList.IsTrue_N));
@@ -179,32 +179,32 @@ public partial class _Default : System.Web.UI.Page
 
                 //cmd.Parameters.Add(access.GetParameter("@finishDate", ConvertToDBValue(finishDate.Value)));
                 cmd.Parameters.Add(access.GetParameter("@firstDate", ConvertToDBValue(firstDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@firstAmount", firstAmount.Value));
+                cmd.Parameters.Add(access.GetParameter("@firstAmount", ConvertToDBValue(firstAmount.Value)));
                 cmd.Parameters.Add(access.GetParameter("@secondDate", ConvertToDBValue(secondDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@secondAmount", secondAmount.Value));
+                cmd.Parameters.Add(access.GetParameter("@secondAmount", ConvertToDBValue(secondAmount.Value)));
                 cmd.Parameters.Add(access.GetParameter("@thirdDate", ConvertToDBValue(thirdDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@thirdAmount", thirdAmount.Value));
+                cmd.Parameters.Add(access.GetParameter("@thirdAmount", ConvertToDBValue(thirdAmount.Value)));
                 cmd.Parameters.Add(access.GetParameter("@lastDate", ConvertToDBValue(lastDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@lastAmount", lastAmount.Value));
+                cmd.Parameters.Add(access.GetParameter("@lastAmount", ConvertToDBValue(lastAmount.Value)));
                 cmd.Parameters.Add(access.GetParameter("@memo", txt_memo.Value));
                 cmd.Parameters.Add(access.GetParameter("@client", contractClient.Value));
 
                 cmd.Parameters.Add(access.GetParameter("@firstPayDate", ConvertToDBValue(firstPayDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@firstPayAmount", txt_firstPay.Value));
+                cmd.Parameters.Add(access.GetParameter("@firstPayAmount", ConvertToDBValue(txt_firstPay.Value)));
                 cmd.Parameters.Add(access.GetParameter("@secondPayDate", ConvertToDBValue(secondPayDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@secondPayAmount", txt_secondPay.Value));
+                cmd.Parameters.Add(access.GetParameter("@secondPayAmount", ConvertToDBValue(txt_secondPay.Value)));
                 cmd.Parameters.Add(access.GetParameter("@thirdPayDate", ConvertToDBValue(thirdPayDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@thirdPayAmount", txt_thirdPay.Value));
+                cmd.Parameters.Add(access.GetParameter("@thirdPayAmount", ConvertToDBValue(txt_thirdPay.Value)));
                 cmd.Parameters.Add(access.GetParameter("@lastPayDate", ConvertToDBValue(lastPayDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@lastPayAmount", txt_lastPay.Value));
+                cmd.Parameters.Add(access.GetParameter("@lastPayAmount", ConvertToDBValue(txt_lastPay.Value)));
                 cmd.Parameters.Add(access.GetParameter("@leader", txt_leader.Value));
                 cmd.Parameters.Add(access.GetParameter("@deliveryDate", ConvertToDBValue(deliveryDate.Value)));
                 cmd.Parameters.Add(access.GetParameter("@signatureDate", ConvertToDBValue(signatureDate.Value)));
 
                 cmd.Parameters.Add(access.GetParameter("@fourthDate", ConvertToDBValue(fourthDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@fourthAmount", fourthAmount.Value));
+                cmd.Parameters.Add(access.GetParameter("@fourthAmount", ConvertToDBValue(fourthAmount.Value)));
                 cmd.Parameters.Add(access.GetParameter("@fourthPayDate", ConvertToDBValue(fourthPayDate.Value)));
-                cmd.Parameters.Add(access.GetParameter("@fourthPayAmount", txt_fourthPay.Value));
+                cmd.Parameters.Add(access.GetParameter("@fourthPayAmount", ConvertToDBValue(txt_fourthPay.Value)));
                 cmd.Parameters.Add(access.GetParameter("@moneyType", ddl_moneyTypy.SelectedItem.Value));
                 cmd.Parameters.Add(access.GetParameter("@user", ((CMS.Model.User)HttpContext.Current.Session["User"]).UserName));
 

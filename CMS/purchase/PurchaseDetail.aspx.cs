@@ -512,13 +512,13 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
         string quantity = Request.Form["txt_quantity" + index];
         if (string.IsNullOrEmpty(unitPrice))
         {
-            cmd.Parameters.Add(access.GetParameter("@unitPrice", unitPrice));
+            cmd.Parameters.Add(access.GetParameter("@unitPrice", DBNull.Value));
         }
         else
         {
             cmd.Parameters.Add(access.GetParameter("@unitPrice", Convert.ToDecimal(unitPrice)));
         }
-        cmd.Parameters.Add(access.GetParameter("@quantity", quantity));
+        cmd.Parameters.Add(access.GetParameter("@quantity", Common.ConvertToDBValue(quantity)));
         string price = string.Empty;
         if (string.IsNullOrEmpty(unitPrice) || string.IsNullOrEmpty(quantity))
         {
