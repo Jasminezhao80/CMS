@@ -32,6 +32,7 @@ public partial class product_ProductList : System.Web.UI.Page
         {
             sql += " and (A.product_name like '%{0}%' or A.product_material like '%{0}%' or A.product_size like '%{0}%' or B.name like '%{0}%')";
         }
+        sql += " order by product_name,product_size ";
         DataTable tb = DBHelper.GetTableBySql(string.Format(sql,txt_search.Value));
         grid_product.DataSource = tb;
         grid_product.DataBind();

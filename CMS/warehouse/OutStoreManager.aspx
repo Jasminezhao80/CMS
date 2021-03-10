@@ -11,12 +11,32 @@
     <link rel="stylesheet" href="../css/usercontrol.css" />
         <script src ="../js/jquery-3.1.1.min.js"></script>
     <script src ="../js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .table-show {
+            margin-bottom:0px;
+            margin-top:0px;
+            table-layout:fixed;
+        }
+    </style>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#pop_outStore').on('show.bs.modal', function () {
                 Clear();
+                TypeChange();
             })
+            loadTable();
         });
+        function loadTable() {
+            var t = document.getElementById("<%=gridList.ClientID%>");
+            var t2 = t.cloneNode(true);
+
+            for (i = t2.rows.length - 1; i > 0; i--) {
+                t2.deleteRow(i)
+            }
+            t.deleteRow(0)
+            var divGrid = document.getElementById("gridHeader");
+            divGrid.appendChild(t2);
+        }
         function Clear() {
             $("#txt_quantity").val("");
             $("#txt_leaveStore").val("");
@@ -180,6 +200,13 @@
         <div class="rightPanel">
             <div class="container-fluid">
                     <div class="row">
+                    <div class="col-md-2 text-right">
+                        <span class="text-info">是否显示0库存商品:</span>
+                    </div>
+                    <div class="col-md-2">
+                    <asp:DropDownList ID="ddl_IsDispaly" runat="server" class="form-control" style="width:70%" OnSelectedIndexChanged="ddl_IsDispaly_SelectedIndexChanged"  AutoPostBack="true">
+                    </asp:DropDownList>
+                    </div>
                     <div class="col-md-5">
                         <input id="txt_search" class="form-control" runat="server" placeholder="商品名称/规格/材质"/>
                     </div>
@@ -187,52 +214,58 @@
                         <input id="btn_search" type="button" class="btn btn-primary" value="查询" runat="server" onserverclick="btn_search_ServerClick"/>
                     </div>
                 </div>
-                <div class="row">
-                    <asp:gridview runat="server" ID="gridList" EmptyDataText="没有数据" AutoGenerateColumns="false" class="table table-list table-hover"  >
+                <div class="row" >
+                   <br />
+                    <div id="gridHeader" style="overflow-y:scroll"></div>
+                   <div id="gridBody" style="height:500px;overflow-y:scroll">
+                   <asp:gridview runat="server" ID="gridList" EmptyDataText="没有数据" AllowPaging="true" PageSize="100" OnPageIndexChanging="gridList_PageIndexChanging" AutoGenerateColumns="false" class="table table-list table-hover table-show"
+                     >
                         <Columns>
-                            <asp:TemplateField HeaderText="序号"  >
+                            <asp:TemplateField HeaderText="序号" HeaderStyle-Width="5%" ItemStyle-Width="5%"  >
                                 <ItemTemplate>
                                     <%#Container.DataItemIndex + 1 %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="商品名称">
+                            <asp:TemplateField HeaderText="商品名称" HeaderStyle-Width="25%" ItemStyle-Width="25%">
                                 <ItemTemplate>
                                     <%#Eval("product_name") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="规格">
+                            <asp:TemplateField HeaderText="规格" HeaderStyle-Width="23%" ItemStyle-Width="23%">
                                 <ItemTemplate>
                                     <%#Eval("product_size") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="材质">
+                            <asp:TemplateField HeaderText="材质" HeaderStyle-Width="10%" ItemStyle-Width="10%">
                                 <ItemTemplate>
                                     <%#Eval("product_material") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="总入库数量">
+                            <asp:TemplateField HeaderText="总入库数量" HeaderStyle-Width="9%" ItemStyle-Width="9%">
                                 <ItemTemplate>
                                     <%#Eval("inTotal") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="总出库数量">
+                            <asp:TemplateField HeaderText="总出库数量" HeaderStyle-Width="9%" ItemStyle-Width="9%">
                                 <ItemTemplate>
                                     <%#Eval("outTotal") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="现库存数量">
+                            <asp:TemplateField HeaderText="现库存数量" HeaderStyle-Width="9%" ItemStyle-Width="9%">
                                 <ItemTemplate>
                                     <%#Convert.ToInt32(Eval("inTotal"))-Convert.ToInt32(Eval("outTotal")) %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="操作">
-                                <ItemTemplate>
+                            <asp:TemplateField HeaderText="操作"  HeaderStyle-Width="10%" ItemStyle-Width="10%">
+                                <ItemTemplate  >
                             <asp:LinkButton ID="btnOut" runat="server" data-toggle="modal" data-target="#pop_outStore"  OnClientClick='<%#Eval("product_id","OutStore_Click(this,{0})") %>' Visible='<%#Function.CheckButtonPermission("A040301") %>'>出库</asp:LinkButton>
                                     </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
                     </asp:gridview>
-
+ 
+                    </div>
+                    
                 </div>
             </div>
             <div class="modal fade" id="pop_outStore" onload="">

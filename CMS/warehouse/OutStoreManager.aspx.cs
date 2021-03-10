@@ -17,6 +17,8 @@ public partial class warehouse_OutStoreManager : System.Web.UI.Page
         if (!IsPostBack)
         {
             Common.FillDropDown(this.ddl_outStoreType, (int)CodeListType.OutStoreType);
+            Common.DropDownBind(this.ddl_IsDispaly, (int)CodeListType.IsTrueType,false);
+            
             GridDataBind();
         }
     }
@@ -30,13 +32,23 @@ public partial class warehouse_OutStoreManager : System.Web.UI.Page
                     (SELECT product_id,SUM(quantity) AS outTotal FROM tb_outstore_detail
                     GROUP BY product_id) T2 ON (T1.product_id = T2.product_id)
                     inner JOIN tb_product T3 ON(T1.product_id = T3.id)
-                    ";
+                     where 1=1 ";
         if (txt_search.Value.Trim() != "")
         {
-            sql += " where T3.product_name like '%{0}%' or T3.product_size like '%{0}%' or T3.product_material like '%{0}%' ";
+            sql += " and ( T3.product_name like '%{0}%' or T3.product_size like '%{0}%' or T3.product_material like '%{0}%' )";
             sql = string.Format(sql, txt_search.Value.Trim());
         }
-        gridList.DataSource = DBHelper.GetTableBySql(sql);
+        //不显示0库存的商品
+        if (ddl_IsDispaly.SelectedValue == ((int)CodeList.IsTrue_N).ToString())
+        {
+            sql += " and (case when T2.outTotal IS NULL then 0 ELSE T2.outTotal END) < T1.inTotal";
+        }
+        sql += " order by product_name,product_size ";
+       
+
+
+        DataTable tb = DBHelper.GetTableBySql(sql);
+        gridList.DataSource = tb;
         gridList.DataBind();
     }
 
@@ -138,6 +150,17 @@ public partial class warehouse_OutStoreManager : System.Web.UI.Page
 
     protected void btn_search_ServerClick(object sender, EventArgs e)
     {
+        GridDataBind();
+    }
+
+    protected void ddl_IsDispaly_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        GridDataBind();
+    }
+
+    protected void gridList_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        gridList.PageIndex = e.NewPageIndex;
         GridDataBind();
     }
 }

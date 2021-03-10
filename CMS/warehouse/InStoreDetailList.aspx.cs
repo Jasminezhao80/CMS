@@ -45,4 +45,10 @@ public partial class warehouse_InStoreDetailList : System.Web.UI.Page
         }
 
     }
+
+    protected void gridList_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        gridList.PageIndex = e.NewPageIndex;
+        GridDataBind();
+    }
 }
