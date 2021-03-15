@@ -111,54 +111,54 @@
                 <div class="row">
                     <asp:gridview runat="server" ID="gridList" EmptyDataText="没有数据" AutoGenerateColumns="false" class="table table-list table-hover" >
                         <Columns>
-                            <asp:TemplateField HeaderText="序号" >
+                            <asp:TemplateField HeaderText="序号" HeaderStyle-Width="4%" ItemStyle-Width="4%" >
                                 <ItemTemplate>
                                     <%#Container.DataItemIndex + 1 %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="出库类型">
+                            <asp:TemplateField HeaderText="出库类型" HeaderStyle-Width="7%" ItemStyle-Width="7%">
                                 <ItemTemplate>
                                     <%#Eval("typeName") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="商品名称">
+                            <asp:TemplateField HeaderText="商品名称" HeaderStyle-Width="16%" ItemStyle-Width="16%">
                                 <ItemTemplate>
                                     <%#Eval("product_name") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="规格">
+                            <asp:TemplateField HeaderText="规格" HeaderStyle-Width="15%" ItemStyle-Width="15%">
                                 <ItemTemplate>
                                     <%#Eval("product_size") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="材质">
+                            <asp:TemplateField HeaderText="材质" HeaderStyle-Width="10%" ItemStyle-Width="10%">
                                 <ItemTemplate>
                                     <%#Eval("product_material") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="出库数量">
+                            <asp:TemplateField HeaderText="出库数量" HeaderStyle-Width="7%" ItemStyle-Width="7%">
                                 <ItemTemplate>
                                     <%#Eval("quantity") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
 
-                            <asp:TemplateField HeaderText="借用项目/领用部门">
+                            <asp:TemplateField HeaderText="借用项目/领用部门" HeaderStyle-Width="20%" ItemStyle-Width="20%">
                                 <ItemTemplate>
                                     <%#Eval("contract_id") is null || Eval("contract_id").ToString() == "" ?  Eval("outstore_project") : Eval("contractName")%>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="领用人">
+                            <asp:TemplateField HeaderText="领用人" HeaderStyle-Width="7%" ItemStyle-Width="7%">
                                 <ItemTemplate>
                                     <%#Eval("outstore_person") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="领用日期" >
+                            <asp:TemplateField HeaderText="领用日期" HeaderStyle-Width="9%" ItemStyle-Width="9%">
                                 <ItemTemplate>
                                     <%#Convert.ToDateTime(Eval("outstore_date")).ToString("yyyy-MM-dd") %>
                                     <%-- <input type="date" runat="server" style="width:100%;border:none"  value='<%# Eval("in_warehouse_date") is null || Eval("in_warehouse_date") is DBNull || Eval("in_warehouse_date").ToString() ==""? string.Empty : Convert.ToDateTime(Eval("in_warehouse_date")).ToString("yyyy-MM-dd") %>' onchange='<%#Eval("id","SaveWareHouseDate({0},this)") %>' />--%>
                                 </ItemTemplate>
                             </asp:TemplateField>   
-                            <asp:TemplateField HeaderText="操作">
+                            <asp:TemplateField HeaderText="操作" HeaderStyle-Width="5%" ItemStyle-Width="5%">
                                 <ItemTemplate>
                                     <asp:LinkButton ID="btn" runat="server" OnClientClick="javascript:return confirm('确定要删除此出库单么？')"  OnClick="btn_Click" CommandArgument='<%#Eval("id") %>'>删除</asp:LinkButton>
                                 </ItemTemplate>

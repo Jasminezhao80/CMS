@@ -58,7 +58,9 @@
         function load() {
              var screenHeight = document.documentElement.clientHeight;
             var top =document.getElementById("div_rightPanel").offsetTop;
-            var hight = screenHeight - top -110;
+            var hight = screenHeight - top - 135;
+            var pager = document.getElementById("pager1");
+            pager.top = screenHeight - 50 + 'px';
             var ddl_project = $("#ddl_project").val();
             var ddl_supplier = $("#ddl_supplier").val();
             var ddl_isInWarehouse = $("#ddl_isInWarehouse").val();
@@ -496,8 +498,8 @@
                     </div>
                 </div>
                 <div class="row">
-                <table id="tableList" style="font-weight:normal;width:100%"  ></table>
-                <div id="pager1"></div>
+                <table id="tableList" style="position:relative;font-weight:normal;width:100%"  ></table>
+                <div id="pager1" style="position:absolute;left:0px;"></div>
                 </div>
 
                 <div class="modal fade" id="pop_inStore" >
