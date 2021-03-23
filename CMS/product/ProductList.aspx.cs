@@ -24,7 +24,7 @@ public partial class product_ProductList : System.Web.UI.Page
     }
     private void BindGrid()
     {
-        string sql = @"select A.id,product_num,product_name,product_material,product_size,product_category_id,product_unit_id,B.name as category,C.name as unit 
+        string sql = @"select A.id,product_num,product_name,product_material,product_size,product_category_id,product_unit_id,B.name as category,C.name as unit,A.instore_flag  
                         from tb_product A  
                         left join tb_code_list B on (A.product_category_id = B.id) 
                         left join tb_code_list C on (A.product_unit_id = C.id) where del_flag=0 ";
@@ -46,10 +46,12 @@ public partial class product_ProductList : System.Web.UI.Page
         string material = txt_material.Value.Trim();
         string categoryId = ddl_type.SelectedItem.Value;
         string unitId = ddl_unit.SelectedItem.Value;
+        string instoreFlag = Request.Form["radio"];
 
         //检查商品信息是否已经在数据库中存在
         ProductBll bll = new ProductBll();
-        if (bll.GetProduct(name, size, material, categoryId, unitId) != null)
+        CMS.Model.Product product = bll.GetProduct(name, size, material, categoryId, unitId);
+        if (product != null && product.Id != id)
         {
             Common.Alert("此商品已经存在，不能重复添加！", this);
             return;
@@ -59,12 +61,12 @@ public partial class product_ProductList : System.Web.UI.Page
         if (id > 0)
         {
             sql = @"update tb_product set product_num=@num,product_name=@name,product_size=@size,
-                    product_unit_id=@unit,product_category_id=@category,product_material=@material where id = " + id;
+                    product_unit_id=@unit,product_category_id=@category,product_material=@material,instore_flag=@instoreFlag where id = " + id;
         }
         else
         {
-            sql = @"insert into tb_product(product_num,product_name,product_size,product_category_id,product_unit_id,product_material)
-            values(@num,@name,@size,@category,@unit,@material)";
+            sql = @"insert into tb_product(product_num,product_name,product_size,product_category_id,product_unit_id,product_material,instore_flag)
+            values(@num,@name,@size,@category,@unit,@material,@instoreFlag)";
  
         }
         DBAccess access = DBAccess.CreateInstance();
@@ -78,6 +80,7 @@ public partial class product_ProductList : System.Web.UI.Page
             cmd.Parameters.Add(access.GetParameter("@unit", unitId));
             cmd.Parameters.Add(access.GetParameter("@category", categoryId));
             cmd.Parameters.Add(access.GetParameter("@material", material));
+            cmd.Parameters.Add(access.GetParameter("@instoreFlag", instoreFlag));
             access.ExecuteNonQuery(cmd);
         }
         BindGrid();

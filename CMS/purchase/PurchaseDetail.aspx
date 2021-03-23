@@ -342,7 +342,7 @@
                             <th>单位</th>
                             <th>采购数量</th>
                             <th>供应商</th>
-                            <th>要求交货日期</th>
+                            <th>到货日期</th>
                             <th>单价</th>
                             <th>入库日期</th>
                             <th>备注</th>
@@ -573,7 +573,7 @@
                                     <asp:TextBox ID="txt_col8" Text='<%#Eval("col8") %>' runat="server" style="width:80px"></asp:TextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                           <asp:TemplateField HeaderText="要求交货日期">
+                           <asp:TemplateField HeaderText="到货日期">
                                 <ItemTemplate>
                                     <asp:TextBox ID="txt_col9" Text='<%# Eval("col9") is null || Eval("col9") is DBNull || Eval("col9").ToString() == "" ? string.Empty : Convert.ToDateTime(Eval("col9")).ToString("yyyy-MM-dd") %>' runat="server" style="width:80px"></asp:TextBox>
                                 </ItemTemplate>
@@ -583,14 +583,10 @@
                                     <asp:TextBox ID="txt_col10" Text='<%#Eval("col10") %>' runat="server" style="width:80px"></asp:TextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                           <asp:TemplateField HeaderText="入库日期">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txt_col11" Text='<%# Eval("col11") is null || Eval("col11") is DBNull || Eval("col11").ToString() == "" ? string.Empty : Convert.ToDateTime(Eval("col11")).ToString("yyyy-MM-dd") %>' runat="server" style="width:80px"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
+                            
                            <asp:TemplateField HeaderText="备注">
                                 <ItemTemplate>
-                                    <asp:TextBox ID="txt_col12" Text='<%#Eval("col12") %>' runat="server" style="width:80px"></asp:TextBox>
+                                    <asp:TextBox ID="txt_col11" Text='<%#Eval("col11") %>' runat="server" style="width:80px"></asp:TextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
                            </Columns>

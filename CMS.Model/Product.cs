@@ -14,6 +14,7 @@ namespace CMS.Model
         private string material;
         private int categoryId;
         private int unitId;
+        private int instoreFlag;
 
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
@@ -21,5 +22,6 @@ namespace CMS.Model
         public string Material { get => material; set => material = value; }
         public int CategoryId { get => categoryId; set => categoryId = value; }
         public int UnitId { get => unitId; set => unitId = value; }
+        public int InstoreFlag { get => instoreFlag; set => instoreFlag = value; }
     }
 }

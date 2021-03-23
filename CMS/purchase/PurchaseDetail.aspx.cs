@@ -201,7 +201,8 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
         sb.Append("<td><input name='txt_deliveryDate{0}' runat='server' type='date' value='{3}'/></td>");
         sb.Append("<td><input name='txt_unitPrice{0}' runat='server' type='text' style='width:100px' value='{2}'/></td>");
         //sb.Append("<td></td>");
-        sb.Append("<td><input name='txt_warehouseDate{0}' runat='server' type='date' value='{5}'/></td>");
+        //sb.Append("<td><input name='txt_warehouseDate{0}' runat='server' type='date' value='{5}'/></td>");//入库日期
+        sb.Append("<td>{5}</td>");//入库日期改成不可编辑
         sb.Append("<td><input name='txt_memo{0}' runat='server' type='text' style='width:100px' value='{4}'/></td>");
         sb.Append("<td><a href='javascript: '><span onclick='delProduct(this)'>删除</span></a></td>");
         sb.Append("</tr>");
@@ -506,7 +507,8 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             }
         }
         cmd.Parameters.Add(access.GetParameter("@deliveryDate", Common.ConvertToDBValue(Request.Form["txt_deliveryDate" + index])));
-        cmd.Parameters.Add(access.GetParameter("@inWarehouseDate", Common.ConvertToDBValue(Request.Form["txt_warehouseDate" + index])));
+        //入库时间不可修改，只做显示
+        //cmd.Parameters.Add(access.GetParameter("@inWarehouseDate", Common.ConvertToDBValue(Request.Form["txt_warehouseDate" + index])));
 
         string unitPrice = Request.Form["txt_unitPrice" + index];
         string quantity = Request.Form["txt_quantity" + index];
@@ -546,7 +548,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void UpdateOrderDetail(DBAccess access, DbTransaction transaction, string orderId, int index)
     {
         string sql = @"update tb_purchase_orderDetail set supplier_id=@supplierId,
-                        delivery_date=@deliveryDate,in_warehouse_date=@inWarehouseDate,unit_price=@unitPrice,quantity=@quantity,price=@price,memo=@memo 
+                        delivery_date=@deliveryDate,unit_price=@unitPrice,quantity=@quantity,price=@price,memo=@memo 
                         where order_id=@orderId and product_id=@productId";
         DbCommand cmd = access.CreateCommand(sql, transaction.Connection);
         cmd.Transaction = transaction;
@@ -556,9 +558,9 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void InsertOrderDetail(DBAccess access, DbTransaction transaction, string orderId, int index)
     {
         string sql = @"insert into tb_purchase_orderDetail(order_id,product_id,
-                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader,in_warehouse_date)
+                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader)
                                 values(@orderId,@productId,@supplierId,@deliveryDate,@unitPrice,
-                                @quantity,@price,@memo,@leader,@inWarehouseDate)";
+                                @quantity,@price,@memo,@leader)";
         DbCommand cmd = access.CreateCommand(sql, transaction.Connection);
         cmd.Transaction = transaction;
         SetDetailParameters(cmd, access, orderId, index); ;
@@ -653,8 +655,8 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             detail.DeliveryDate = ((TextBox)row.FindControl("txt_col9")).Text.Trim();
             string unitPrice = ((TextBox)row.FindControl("txt_col10")).Text.Trim();
             detail.UnitPrice = Convert.ToDecimal(string.IsNullOrEmpty(unitPrice) ? "0" : unitPrice);
-            detail.InWarehouseDate = ((TextBox)row.FindControl("txt_col11")).Text.Trim();
-            detail.Memo = ((TextBox)row.FindControl("txt_col12")).Text.Trim();
+            //detail.InWarehouseDate = ((TextBox)row.FindControl("txt_col11")).Text.Trim();
+            detail.Memo = ((TextBox)row.FindControl("txt_col11")).Text.Trim();
 
             Product product = new Product();
             detail.Product = product;
@@ -758,16 +760,16 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
     private void InsertImportOrderDetail(DBAccess access, DbTransaction transaction, int orderId, PurchaseDetail detail)
     {
         string sql = @"insert into tb_purchase_orderDetail(order_id,product_id,
-                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader,in_warehouse_date)
+                            supplier_id,delivery_date,unit_price,quantity,price,memo,leader)
                                 values(@orderId,@productId,@supplierId,@deliveryDate,@unitPrice,
-                                @quantity,@price,@memo,@leader,@warehouseDate)";
+                                @quantity,@price,@memo,@leader)";
         DbCommand cmd = access.CreateCommand(sql, transaction.Connection);
         cmd.Transaction = transaction;
         cmd.Parameters.Add(access.GetParameter("@orderId", orderId));
         cmd.Parameters.Add(access.GetParameter("@productId", detail.Product.Id));
         cmd.Parameters.Add(access.GetParameter("@supplierId", detail.SupplierId));
         cmd.Parameters.Add(access.GetParameter("@deliveryDate", Common.ConvertToDBValue(detail.DeliveryDate)));
-        cmd.Parameters.Add(access.GetParameter("@warehouseDate", Common.ConvertToDBValue(detail.InWarehouseDate)));
+        //cmd.Parameters.Add(access.GetParameter("@warehouseDate", Common.ConvertToDBValue(detail.InWarehouseDate)));
         cmd.Parameters.Add(access.GetParameter("@unitPrice", detail.UnitPrice));
         cmd.Parameters.Add(access.GetParameter("@quantity", detail.Quantity));
         cmd.Parameters.Add(access.GetParameter("@price", detail.UnitPrice * detail.Quantity));
@@ -886,13 +888,14 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
             for (int i = sheet.FirstRowNum + 1; i <= sheet.LastRowNum; i++)
             {
                 DataRow row = tb.NewRow();
-                // 共16列
-                for (int j = 0; j < 16; j++)
+                // 共11列
+                for (int j = 0; j < 11; j++)
                 {
                     try
                     {
                         ICell cell = sheet.GetRow(i).GetCell(j);
-                        if (j == 8 || j==10)
+                        
+                        if (j == 8)//到货日期
                         {
                             if (cell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(cell))
                             {
@@ -903,6 +906,7 @@ public partial class purchase_PurchaseDetail : System.Web.UI.Page
                         {
                             row[j] = cell;
                         }
+                        
                     }
                     catch (Exception e)
                     {

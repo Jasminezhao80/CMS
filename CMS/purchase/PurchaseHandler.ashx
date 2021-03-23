@@ -39,7 +39,7 @@ public class PurchaseHandler : IHttpHandler {
         LEFT JOIN tb_code_list F ON(F.id = C.product_unit_id)
         LEFT JOIN tb_code_list G ON (G.id = A.supplier_id) 
         Left join tb_instore_detail H on (A.id = H.purchase_order_detail_id)        
-        where B.is_disabled <> 1 ";
+        where B.is_disabled <> 1 and C.instore_flag = 1  ";
         if (context.Request["pId"] != "0")
         {
             sql += " and B.project_id ='" + context.Request["pId"] + "'";

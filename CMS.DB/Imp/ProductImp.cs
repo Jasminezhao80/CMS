@@ -43,6 +43,7 @@ namespace CMS.DB.Imp
                 product.Name = row["product_name"].ToString();
                 product.CategoryId = Convert.ToInt32(row["product_category_id"]);
                 product.UnitId = Convert.ToInt32(row["product_unit_id"]);
+                product.InstoreFlag = Convert.ToInt32(row["instore_flag"]);
                 return product;
             }
             return null;

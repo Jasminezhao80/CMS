@@ -188,4 +188,8 @@ public class Common
         string script = "<script>alert('" + info + "')</script>";
         p.ClientScript.RegisterStartupScript(p.GetType(), "", script);
     }
+    public static string ConvertToYesNo(string flag)
+    {
+        return flag == "1" ? "是" : "否";
+    }
 }

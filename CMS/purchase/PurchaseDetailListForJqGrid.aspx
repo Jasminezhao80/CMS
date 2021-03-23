@@ -409,8 +409,8 @@
             return result;
         };
         function InstoreClick(id, quantity) {
-            $("#txt_inStore").val("");
-            $("#txt_outStoreTime").val("");
+            $("#txt_inStore").val(quantity);
+            $("#txt_outStoreTime").val($.datepicker.formatDate("yy-mm-dd", new Date()));
             $("#txt_quantity").val(quantity);
             $("#txt_id").val(id);
         };

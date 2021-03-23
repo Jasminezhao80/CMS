@@ -37,6 +37,7 @@
                     $("#txt_size").val(product.Size);
                     $("#txt_id").val(product.Id);
                     $("#txt_material").val(product.Material);
+                    $(":radio[value=" + product.InstoreFlag + "]").attr('checked', 'checked');
                     $("select#ddl_type option[value=" + product.CategoryId + "]").attr('selected', 'true');
                     $("select#ddl_unit option[value=" + product.UnitId + "]").attr('selected', 'true');
                 },
@@ -118,6 +119,11 @@
                             <%#Eval("unit") %>
                         </ItemTemplate>
                     </asp:TemplateField>
+                    <asp:TemplateField HeaderText ="是否需要入库" ItemStyle-Width="10%">
+                        <ItemTemplate>
+                            <%#Common.ConvertToYesNo(Eval("instore_flag").ToString()) %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:TemplateField HeaderText ="操作">
                         <ItemTemplate>
                             <asp:LinkButton ID="btnEdit" runat="server" OnClientClick='<%#string.Format("EditClick({0},{1},{2},{3})",new object[] { Container.DataItemIndex + 1, Eval("product_category_id"), Eval("product_unit_id"), Eval("id") })%>' data-toggle="modal" data-target="#div_detail">修改</asp:LinkButton>
@@ -150,7 +156,7 @@
                                 </div>
                             </div>--%>
                             <div class="row form-group">
-                                <div class="col-md-1 text-right">
+                                <div class="col-md-2 text-right">
                                     <span class="text-info">商品名称:</span>
                                 </div>
                                 <div class="col-md-3">
@@ -158,7 +164,7 @@
                                 </div>
                             </div>
                              <div class="row form-group">
-                                <div class="col-md-1 text-right">
+                                <div class="col-md-2 text-right">
                                     <span class="text-info">商品类别:</span>
                                 </div>
                                 <div class="col-md-3">
@@ -166,7 +172,7 @@
                                 </div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-md-1 text-right">
+                                <div class="col-md-2 text-right">
                                     <span class="text-info">规格/型号:</span>
                                 </div>
                                 <div class="col-md-3">
@@ -174,7 +180,7 @@
                                 </div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-md-1 text-right">
+                                <div class="col-md-2 text-right">
                                     <span class="text-info">材质:</span>
                                 </div>
                                 <div class="col-md-3">
@@ -182,7 +188,7 @@
                                 </div>
                             </div> 
                             <div class="row form-group">
-                                <div class="col-md-1 text-right">
+                                <div class="col-md-2 text-right">
                                     <span class="text-info">单位:</span>
                                 </div>
                                 <div class="col-md-3">
@@ -190,7 +196,16 @@
 
                                     </asp:DropDownList>
                                 </div>
-                            </div>                            
+                            </div>             
+                            <div class="row form-group">
+                                <div class="col-md-2 text-right">
+                                    <span class="text-info">是否需要入库:</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="radio" name="radio" value="1"  checked="checked"/>是
+                                    <input type="radio" name="radio" value="0" /> 否
+                                </div>
+                            </div>                      
                         </div>
 
                         
