@@ -80,6 +80,7 @@
             Clear();
         }
         function find_contract() {
+            
             $("#txt_contractId").val('');
             var pname = document.getElementById("txt_contract").value;
             
@@ -126,12 +127,14 @@
             }
         };
         function selected() {
+           
             var selectList = $("#contractShow option:selected");
             var id = selectList.val();
             var name = selectList.text();
             $("#txt_contractId").val(id);
             $("#txt_contract").val(name);
             document.getElementById("contractDiv").style.display = "none";
+           
             document.getElementById("contractInfo").innerText = name;
         }; 
         function submit_click() {
@@ -300,12 +303,12 @@
                                         <span class="text-info">合同编号:</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <input  class="form-control" id="txt_contract" value="" runat="server" oninput="find_contract()" />
+                                        <input  class="form-control" id="txt_contract" value="" autocomplete="off" runat="server" oninput="find_contract()" />
                                         
                                         <input type="hidden" id="txt_contractId" runat="server"  value=""/>
                                         <input type="hidden" id="txt_productid" runat="server" value=""/>
                                         <div id="contractDiv" style="display: none;position: fixed;z-index:9;width:400px">
-					                        <select class="form-control" multiple="multiple" id="contractShow" ondblclick="selected()" style="width: 500px; margin-left: 0px; margin-top: 0px;" >
+					                        <select class="form-control" multiple="multiple" id="contractShow" onchange="selected()" style="width: 500px; margin-left: 0px; margin-top: 0px;" >
 					                        </select>
 				                        </div>
                                     </div>

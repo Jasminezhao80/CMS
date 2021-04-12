@@ -130,7 +130,7 @@ public partial class warehouse_OutStoreManager : System.Web.UI.Page
         {
             return "";
         }
-        string sql = @"select id,contract_num,contract_name from tb_contract where contract_type={0} and (contract_num like '%{1}%' or contract_name like '%{1}%')";
+        string sql = @"select id,contract_num,contract_name from tb_contract where contract_type={0} and (contract_num like '%{1}%' or contract_name like '%{1}%') order by contract_num";
         sql = string.Format(sql, (int)CodeList.ContractType_Project, searchKey);
         DataTable tb = DBHelper.GetTableBySql(sql);
         string result = JsonConvert.SerializeObject(tb);

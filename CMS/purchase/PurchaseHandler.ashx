@@ -29,7 +29,7 @@ public class PurchaseHandler : IHttpHandler {
             return;
         }
         //string type = context.Request["cellType"];
-        string sql = @"SELECT H.quantity as instore_quantity,A.product_id,A.order_id,A.price,A.quantity,A.in_warehouse_date,A.id,B.order_num,D.name AS projectName,E.name AS category,B.contract_id,B.apply_date,A.delivery_date,
+        string sql = @"SELECT H.quantity as instore_quantity,A.product_id,A.order_id,A.price,A.quantity,A.in_warehouse_date,A.delivery_date,A.id,B.order_num,D.name AS projectName,E.name AS category,B.contract_id,B.apply_date,A.delivery_date,
         C.product_name,C.product_size,C.product_material,F.name AS unit,A.unit_price,G.name AS supplier,A.leader,A.memo,A.supplier_id 
         FROM tb_purchase_orderdetail A
         LEFT JOIN tb_purchase_order B ON (A.order_id = B.id)

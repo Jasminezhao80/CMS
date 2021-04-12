@@ -73,7 +73,7 @@
                     postData: {pId:ddl_project,pSupplier:ddl_supplier,pWarehouse:ddl_isInWarehouse,pSearch:txt_searchKey},
                     mtype: "post",
                     datatype: "json",
-                     colNames: ['所属项目', '类别', '申购单号','合同编号','申请日期','采购内容','规格','单位','单价','数量','总价','入库日期','供应商','负责人','备注','商品ID','order_id','已入库数量','入库操作'],
+                     colNames: ['所属项目', '类别', '申购单号','合同编号','申请日期','采购内容','规格','单位','单价','数量','总价','到货日期','供应商','负责人','备注','商品ID','order_id','已入库数量','入库操作'],
                     colModel: [{ name: 'projectName', index: 'projectName' },
                     { name: 'category', index: 'category', classes: 'GridCell' },
                     { name: 'order_num', index: 'order_num', width:350,formatter: editLink, formatoptions: { baseLinkUrl: "../purchase/PurchaseDetail.aspx", addParam: '&&orderId=10&&backType=jqGridDetailList' } },
@@ -85,8 +85,9 @@
                     { name: 'unit', index: 'unit' },
                     { name: 'unit_price', index: 'unit_price', editable: false, edittype: 'text', editrules: { required: false, number: true } },
                     { name: 'quantity', index: 'quantity', editable: false, edittype: 'text', editrules: { required: true, integer: true } },
-                    { name: 'price', index: 'price' },
-                    {
+                        { name: 'price', index: 'price' },
+                        { name: 'delivery_date', index: 'delivery_date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' }},
+                    /*{
                         name: 'in_warehouse_date', index: 'in_warehouse_date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, editable: false, edittype: 'text',
                         editoptions: {
                             size: 10,
@@ -110,7 +111,7 @@
 
                             }
                         }
-                    },
+                    },*/
                     //{ name: 'supplier', index: 'supplier', editable: true, edittype: 'select', editoptions: { dataUrl:"../purchase/PurchaseHandler.ashx?Function=Supplier"} },
                     { name: 'supplier', index: 'supplier', editable: false, edittype: 'select', editoptions: { value:getSupplier()} },//getSupplier不起作用，没有找到原因
                         //{ name: 'delivery_date', index: 'delivery_date', formatter: 'date', formatoptions: { newformat: 'Y-m-d' } },
@@ -172,7 +173,7 @@
 
                             $("#tableList").setColProp("quantity",{editable:false});
 
-                            $("#tableList").setColProp("in_warehouse_date",{editable:false});
+                            //$("#tableList").setColProp("in_warehouse_date",{editable:false});
 
                             $("#tableList").setColProp("supplier",{editable:false});
 
@@ -190,7 +191,7 @@
 
                             $("#tableList").setColProp("quantity",{editable:false});
 
-                            $("#tableList").setColProp("in_warehouse_date",{editable:false});
+                            //$("#tableList").setColProp("in_warehouse_date",{editable:false});
 
                             $("#tableList").setColProp("supplier",{editable:false});
 
@@ -222,10 +223,10 @@
                             $("#tableList").setColProp("quantity", { editable: true });
                             $("#tableList").editCell(iRow, iCol, true);
                         }
-                        if (iCol == 12) {
+                        /*if (iCol == 12) {
                             $("#tableList").setColProp("in_warehouse_date", { editable: true });
                             $("#tableList").editCell(iRow, iCol, true);
-                        }
+                        }*/
                         if (iCol == 13) {
                             $("#tableList").setColProp("supplier", { editable: true });
                             $("#tableList").editCell(iRow, iCol, true);
@@ -318,6 +319,7 @@
                                     }
                                 });
                                 break;
+                            /*
                             case "in_warehouse_date":
                                 $.ajax({
                                     async: false,
@@ -334,7 +336,7 @@
                                         alert(err);
                                     }
                                 });
-                                break;
+                                break;*/
                             case "supplier":
                                 $.ajax({
                                     async: false,
